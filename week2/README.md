@@ -2,7 +2,7 @@
 
 > 입력이나 출력에 자연어 처리 인공지능이 도입됩니다.
 
-[Week2 Draft]("./gomemory_week2_draft.pdf")
+[Week2 Draft](./gomemory_week2_draft.pdf)
 
 ### 1. 회원 가입
 
