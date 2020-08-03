@@ -2,7 +2,7 @@
 
 >이미지/영상으로 입력하거나 인공지능이 만든 이미지를 출력합니다.
 
-[Week3 Draft](./gomemory_week3_draft.pdf)
+[Week3 Draft](./GoMemory_week3_draft.pdf)
 
 ### **1. 부적절한 이미지 처리**
 

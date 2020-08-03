@@ -2,7 +2,7 @@
 
 > 표 데이터를 이용하여 사용자에게 맞춤형 추천을 합니다.
 
-[Week4 Draft](./gomemory_week4_draft.pdf)
+[Week4 Draft](./GoMemory_week4_draft.pdf)
 
 ### 1. 친구 추천
 
