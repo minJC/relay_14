@@ -10,22 +10,17 @@ const { Meta } = Card;
 
 function LandingPage() {
   return (
-    <body>
-      <div class="main">
-        <h1 class="search_title">우리들의 고여버린 기억</h1>
-        <form class="search_box" method="post">
-          <input class="search_input" type="text" />
-          <div class="icon_box">
-            <button class="mike_button">
-              <span class="material-icons">mic</span>
-            </button>
-            <a href="/search" class="search_button">
-              <span class="material-icons">search</span>
-            </a>
-          </div>
-        </form>
-      </div>
-    </body>
+
+<div class="main">
+     <h1 class="main_title">우리들의<br/>고여버린 기억💦</h1>
+     <form class="main_box" method="post">
+        <input class="main_input" type="text"/>
+           <div class="icon_box"> 
+              <button class="mike_button"><span class="material-icons">👄</span></button>
+              <a href="/search" class="search_button"><span class="material-icons">🔍</span></a>
+           </div>
+     </form>
+  </div>
   );
 }
 
