@@ -127,25 +127,35 @@ router.post("/searchUser", async (req, res) => {
     res.header("Access-Control-Allow-Origin", "*"); // 모든 도메인
     console.log(req.body.keyword);
     var keyword = req.body.keyword;
-    keyword.replace(" ", "");
+    //keyword.replace(" ", "");
 
     var resultNLP;
 
     try {
-        await axios.get(`https://open-korean-text-api.herokuapp.com/tokenize?text=` + encodeURI(keyword))
+        await axios.get(`https://open-korean-text-api.herokuapp.com/extractPhrases?text=` + encodeURI(keyword))
             .then(response => {
                 if (response.data) {
-                    resultNLP = response.data.token_strings;               //검색 결과 배열에 저장
-                    console.log(resultNLP[0]);
-                    User.find({'tag' : `${resultNLP[0]}`})
-                        .exec((err, user) => {
-                            console.log(err);
-                            if (err) return res.status(400).send(err);
-                            console.log("user", user)
-                            res.status(200).json({ success: true, user })
-                        })
+                    let temp = response.data.phrases;
+                    let data = [];
+                    temp.forEach(element => {
+                        let temp = element.split("\(");
+                        if(temp[0]!='대학교'&&temp[0]!='고등학교'&&temp[0]!='중학교'&&temp[0]!='초등학교'&&temp[0]!='학교'){
+                            let tempObj= new Object;
+                            tempObj.tag=temp[0];
+                            data[data.length]=tempObj;              //object 형태로 배열에 저장
+                        }
+                    });
+                    resultNLP = response.data.phrases;               //검색 결과 배열에 저장
+
+                    let str ={$or: data }                           //키워드값 or검색
+                        User.find(str)
+                            .exec((err, user) => {
+                                console.log(err,user);
+                                if (err) return res.status(400).send(err);
+                                res.status(200).json({ success: true, user })
+                            })
                 } else {
-                    console.log("error:", response.data.token_strings);
+                    console.log("error:", response.data.parases);
                 }
             })
     } catch (error) {
