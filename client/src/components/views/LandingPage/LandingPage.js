@@ -10,6 +10,7 @@ const { Meta } = Card;
 
 function LandingPage() {
   return (
+
 <div class="main">
      <h1 class="main_title">우리들의<br/>고여버린 기억💦</h1>
      <form class="main_box" method="post">
