@@ -3,14 +3,15 @@ const router = express.Router();
 const { User } = require("../models/User");
 const { auth } = require("../middleware/auth");
 const axios = require("axios");
+const key = require('../config/key');
 //=================================
 //             User
 //=================================
 
-//인증부분
-router.get("/auth", auth, (req, res) => {
+router.get("/auth", auth, async (req, res) => {
     res.header("Access-Control-Allow-Origin", "*"); // 모든 도메인
-    ("rerere",res);
+
+    console.log("before", keyword);
     res.status(200).json({
         _id: req.user._id,
         isAdmin: req.user.role === 0 ? false : true,
@@ -20,17 +21,17 @@ router.get("/auth", auth, (req, res) => {
         role: req.user.role,
         image: req.user.image,
         company: req.user.company,
-        school:req.user.school,
+        school: req.user.school,
         phone: req.user.phone,
         birth: req.user.birth,
         intro: req.user.intro,
-        sex: req.user.sex
+        sex: req.user.sex,
+        tag: response.data.token_strings
     });
 });
 
-//회원가입
-router.post("/register", async (req, res) => {
-    res.header("Access-Control-Allow-Origin", "*"); // 모든 도메인
+//db에 데이터 저장
+async function saveData(req) {
     const user = new User(req.body);
     try {
         await user.save()
@@ -38,8 +39,42 @@ router.post("/register", async (req, res) => {
             success: true
         });
     } catch (err) {
-        (err)
+        return (err)
     }
+}
+
+//회원가입
+router.post("/register", async (req, res) => {
+    res.header("Access-Control-Allow-Origin", "*"); // 모든 도메인
+    let keyword = req.body.school + " " + req.body.name + " " + req.body.company + " " + req.body.sex + " " + req.body.birth;
+
+    try {
+        await axios.get(`https://open-korean-text-api.herokuapp.com/tokenize?text=` + encodeURI(keyword))
+            .then(response => {
+                if (response.data) {
+                    req.body.tag = response.data.token_strings;
+                    console.log(req.body);
+                    const user = new User(req.body);
+                    try {
+                        user.save()
+                        return res.status(200).json({
+                            success: true
+                        });
+                    } catch (err) {
+                        return (err)
+                    }
+                } else {
+                    console.log("error:", response.data.token_strings);
+                    return false;
+                }
+            })
+    } catch (error) {
+        console.log(error)
+        return false;
+    }
+
+
+
 });
 
 //로그인
@@ -90,7 +125,7 @@ router.get("/getUser", (req, res) => {
         .exec((err, user) => {
             if (err) return res.status(400).send(err);
 
-           
+
             res.status(200).json({ success: true, user })
         })
 
@@ -104,37 +139,37 @@ router.post("/searchUser", async (req, res) => {
     res.header("Access-Control-Allow-Origin", "*"); // 모든 도메인
     console.log(req.body.keyword);
     var keyword = req.body.keyword;
-    keyword.replace(" ","");
+    keyword.replace(" ", "");
 
     var resultNLP;
 
     try {
-        await axios.get(`https://open-korean-text-api.herokuapp.com/tokenize?text=`+encodeURI(keyword))
-        .then(response => {
-          if (response.data) {
-                resultNLP=response.data.token_strings;               //검색 결과 배열에 저장
-                console.log(resultNLP);
-                User.find({$text:{$search:"류찬규"}})
-                    .exec((err, user) => {
-                        console.log(err);
-                        if (err) return res.status(400).send(err);
-                        console.log("user",user)
-                        res.status(200).json({ success: true, user })
-                    })
-          } else {
-              console.log("error:",response.data.token_strings);
-          }
-        }) 
+        await axios.get(`https://open-korean-text-api.herokuapp.com/tokenize?text=` + encodeURI(keyword))
+            .then(response => {
+                if (response.data) {
+                    resultNLP = response.data.token_strings;               //검색 결과 배열에 저장
+                    console.log(resultNLP);
+                    User.find({ $text: { $search: "류찬규" } })
+                        .exec((err, user) => {
+                            console.log(err);
+                            if (err) return res.status(400).send(err);
+                            console.log("user", user)
+                            res.status(200).json({ success: true, user })
+                        })
+                } else {
+                    console.log("error:", response.data.token_strings);
+                }
+            })
     } catch (error) {
         console.log(error)
     }
-    
-    
 
 
-    
 
-    
+
+
+
+
 });
 
 

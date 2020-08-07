@@ -45,6 +45,9 @@ const userSchema = mongoose.Schema({
     },
     intro : {
         type: String
+    },
+    tag : {
+        type: Array
     }
 })
 //role === 1   normal user 

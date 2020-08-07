@@ -53,8 +53,10 @@ function RegisterPage(props) {
         school:'',
         birth:'',
         phone:'',
-        sex:'',
+        sex1:'',
+        sex2:'',
         intro:'',
+        tag:''
       }}
       validationSchema={Yup.object().shape({
         name: Yup.string()
@@ -84,6 +86,7 @@ function RegisterPage(props) {
             }
            
           }
+          console.log("성별",values.sex);
 
           let dataToSubmit = {
             email: values.email,
@@ -92,19 +95,20 @@ function RegisterPage(props) {
             company : values.company,
             school : values.school,
             birth : values.birth,
-            sex : values.sex,
+            sex : (values.sex1)?"여자":"남자",
             image: `http://gravatar.com/avatar/${moment().unix()}?d=identicon`,
             phone: values.phone,
-            intro: addEnter(values.intro)
+            intro: addEnter(values.intro),
+            tag: ''
           };
 
           dispatch(registerUser(dataToSubmit)).then(response => {
             if (response.payload.success) {
-              //props.history.push("/login");
-              props.history.push("/youknow");
+              props.history.push("/login");
+              //props.history.push("/youknow");
             } else {
-              alert("중복 아이디입니다. 입력을 다시 확인해주세요")
-              alert(response.payload.err.errmsg)
+              
+              alert(response.payload.err.errmsg);
             }
           })
           setSubmitting(false);
@@ -239,10 +243,10 @@ function RegisterPage(props) {
                   onBlur={handleBlur}
                 />
               </Form.Item>
-              <Form.Item label="성별" hasFeedback>
-                <Input id="sex" type="radio" name="sex" value={values.sex} onChange={handleChange}
+              <Form.Item required label="성별" hasFeedback>
+                <Input id="sex" type="radio" name="sex" value={values.sex1} onChange={handleChange}
                   onBlur={handleBlur} style={{marginLeft:'13px', marginRight:'10px'}}/>여자
-                <Input id="sex" type="radio" name="sex" value={values.sex} onChange={handleChange}
+                <Input id="sex" type="radio" name="sex" value={values.sex2} onChange={handleChange}
                   onBlur={handleBlur} style={{marginLeft:'13px', marginRight:'10px'}}/>남자<br/>
               </Form.Item>
               
