@@ -13,10 +13,7 @@ const { Title } = Typography;
 const { Meta } = Card;
 
 function LandingPage(props) {
-   const dispatch = useDispatch();
-   const accountRegExp = /^[A-Za-z0-9_\-.@]{3,20}$/
 
-   const [state, setState] = useState([])
    const [key, setKey] = useState('');
 
     const onChangeKey = e => {
@@ -33,7 +30,7 @@ function LandingPage(props) {
       <div class="main">
          <h1 class="main_title">우리들의<br />고여버린 기억💦</h1>
          <form class="main_box" method="post">
-            <input class="main_input" type="text" placeholder="키워드"
+            <input required class="main_input" type="text" placeholder="키워드"
                onChange={onChangeKey}
             />
             <div class="icon_box">

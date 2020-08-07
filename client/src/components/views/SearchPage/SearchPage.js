@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { withRouter } from "react-router-dom";
+import { Route, Link } from 'react-router-dom';
 import { Card, Avatar, Col, Typography, Row, Button } from 'antd';
 import axios from 'axios';
 import * as Yup from "yup";
@@ -10,21 +11,50 @@ const { Meta } = Card;
 
 
 function SearchPage(props) {
-  const dispatch = useDispatch();
 
-  
-  console.log('pops', props.location.state.key);
-  const [Posts, setPosts] = useState([])
+  //검색창 입력용
+  const [key, setKey] = useState('');
+  const onChangeKey = e => {
+    setKey(e.target.value);
+  };
+
+  useEffect(() => {
+  }, [key]);
+
 
   const searchVariable = {
     keyword: props.location.state.key
   }
 
+
+
+
+  const [Users, setUsers] = useState([])
+
+  //페이지내에서 재 검색 하기 위한 코드
+  const [find, setfind] = useState(0);
   useEffect(() => {
-    axios.post(/*localhost123*/'/api/users/searchUser',searchVariable)
+    axios.post('/api/users/searchUser', searchVariable)
       .then(response => {
+        //console.log(response)
         if (response.data.success) {
-          setPosts(response.data.user)
+          setUsers(response.data.user)
+        } else {
+          alert('Failed to get User Data')
+        }
+      })
+
+  }, [find]);
+
+
+
+
+  useEffect(() => {
+    axios.post(/*localhost123*/'/api/users/searchUser', searchVariable)
+      .then(response => {
+        //console.log(response)
+        if (response.data.success) {
+          setUsers(response.data.user)
         } else {
           alert('Failed to get User Data')
         }
@@ -32,9 +62,9 @@ function SearchPage(props) {
   }, [])
 
 
-  const renderCards = Posts.map((users, index) => {
+  const renderCards = Users.map((users, index) => {
 
-    return <Col lg={24} md={24} xs={24} style={{ marginBottom: '10px',marginLeft:'20px' }}>
+    return <Col lg={24} md={24} xs={24} style={{ marginBottom: '10px', marginLeft: '20px' }}>
       <div class="people_item">
         <button class="plus_button">♡</button>
         <div class="people_item_top">
@@ -47,9 +77,9 @@ function SearchPage(props) {
         </div>
         <div class="people_item_bottom">
           <div class="people_tag_box">
-            <span class="people_tag_item">x</span>
-            <span class="people_tag_item">x</span>
-            <span class="people_tag_item">x</span>
+            <span class="people_tag_item">{`${users.tag[0]}`}</span>
+            <span class="people_tag_item">{`${users.tag[1]}`}</span>
+            <span class="people_tag_item">{`${users.tag[2]}`}</span>
           </div>
         </div>
       </div>
@@ -62,10 +92,17 @@ function SearchPage(props) {
       <div class="top">
         <h1 class="search_title">우리들의 고여버린 기억</h1>
         <form class="search_box" method="post">
-          <input class="search_input" type="text" value={`${props.location.state.key}`}/>
+          <input required class="search_input" onChange={onChangeKey} type="text" defaultValue={`${props.location.state.key}`} />
           <div class="icon_box">
             <button class="mike_button"><span class="material-icons">👄</span></button>
-            <a href="/search" class="search_button"><span class="material-icons">🔍</span></a>
+            <Link to={{
+              pathname: `/search/${key}`,
+              state: {
+                key: key
+              }
+            }}>
+              <span class="material-icons" onClick={() => setfind(find + 1)}>🔍</span>
+            </Link>
           </div>
         </form>
         <div class="tag_box">
