@@ -4,6 +4,7 @@ import RightMenu from './Sections/RightMenu';
 import { Drawer, Button, Icon } from 'antd';
 import './Sections/Navbar.css';
 import useReactRouter from 'use-react-router';
+import {  Link } from 'react-router-dom';
 
 
 import {
@@ -11,7 +12,7 @@ import {
 } from '@ant-design/icons';
 
 
-function NavBar() {
+function NavBar(props) {
   const [visible, setVisible] = useState(false)
   const { location } = useReactRouter();
   const { pathname } = location
@@ -27,7 +28,14 @@ function NavBar() {
   return (
     <nav className="menu" style={{ position: 'fixed', zIndex: 5, width: '100%', overflow:'hidden' }}>
       <div className="menu__logo">
-        <a href="/" style={{fontWeight:'900'}}>Module</a>
+      <Link to={{
+                  pathname : `/`,
+                  state : {
+                     props : props
+                  }
+               }}>
+                  <span class="material-icons" style={{fontWeight:'500'}}>GoMemory</span>
+               </Link>
       </div>
       <div className="menu__container">
         <div className="menu_left">

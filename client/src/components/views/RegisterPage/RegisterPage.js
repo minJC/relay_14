@@ -107,7 +107,6 @@ function RegisterPage(props) {
               props.history.push("/login");
               //props.history.push("/youknow");
             } else {
-              
               alert(response.payload.err.errmsg);
             }
           })

@@ -10,8 +10,6 @@ const key = require('../config/key');
 
 router.get("/auth", auth, async (req, res) => {
     res.header("Access-Control-Allow-Origin", "*"); // 모든 도메인
-
-    console.log("before", keyword);
     res.status(200).json({
         _id: req.user._id,
         isAdmin: req.user.role === 0 ? false : true,
@@ -25,8 +23,7 @@ router.get("/auth", auth, async (req, res) => {
         phone: req.user.phone,
         birth: req.user.birth,
         intro: req.user.intro,
-        sex: req.user.sex,
-        tag: response.data.token_strings
+        sex: req.user.sex
     });
 });
 
@@ -101,7 +98,7 @@ router.get("/logout", auth, async (req, res) => {
             success: true
         });
     } catch (error) {
-        (error)
+        console.log(error)
     }
 });
 

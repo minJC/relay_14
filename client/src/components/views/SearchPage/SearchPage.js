@@ -12,6 +12,8 @@ const { Meta } = Card;
 
 function SearchPage(props) {
 
+  console.log(props);
+
   //검색창 입력용
   const [key, setKey] = useState('');
   const onChangeKey = e => {

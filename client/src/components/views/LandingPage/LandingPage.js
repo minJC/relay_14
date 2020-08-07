@@ -13,9 +13,9 @@ const { Title } = Typography;
 const { Meta } = Card;
 
 function LandingPage(props) {
-
+   const dispatch = useDispatch();
    const [key, setKey] = useState('');
-
+   console.log(props)
     const onChangeKey = e => {
       setKey(e.target.value);
     };
@@ -43,14 +43,6 @@ function LandingPage(props) {
                }}>
                   <span class="material-icons">🔍</span>
                </Link>
-
-
-               {/* <a href={`/search`} key={`${state}`} class="search_button"><span class="material-icons">🔍</span></a> */}
-
-               {/* <Button onClick={handleSubmit} type="primary" disabled={isSubmitting}>
-                  submit
-                        </Button> */}
-               {/* <a href={`/search/${keywords}`} class="search_button"><span class="material-icons">🔍</span></a> */}
             </div>
          </form>
       </div>

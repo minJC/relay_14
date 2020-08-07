@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { FaCode } from "react-icons/fa";
 import { Card, Avatar, Col, Typography, Row, Button } from 'antd';
 import axios from 'axios';
-import moment from 'moment';
-import {BACK_URL} from '../../Link'
+import { useSelector } from "react-redux";
 const { Title } = Typography;
 const { Meta } = Card;
 
@@ -11,7 +10,6 @@ function YouKnowPage(props) {
 
     const [Posts, setPosts] = useState([])
     var image = 'https://static.wadiz.kr/main/media/img-fundingopen-pc@2x.3311937d.jpg';
-    var mainImg = 'https://cdn.wadiz.kr/ft/images/green001/2020/0605/20200605142924749_2233.jpg/wadiz/optimize/';
     useEffect(() => {
         axios.get(/*localhost123*/'/api/users/getUser')
             .then(response => {
@@ -23,6 +21,13 @@ function YouKnowPage(props) {
                 }
             })
     }, [])
+
+    const user = useSelector(state => state.user)
+    console.log("userData=",user);
+    // if (user.userData && user.userData.isAuth) {
+    //     loginOrNot = 1
+    //     //console.log("userdata="+user.userData+" "+user.userData.isAuth)
+    // }
 
 
     const renderCards = Posts.map((users, index) => {
@@ -42,7 +47,7 @@ function YouKnowPage(props) {
     
     return (<div style={{ width: '100%', overflow: 'hidden' }}>
         <section id='mainsection' style={{ backgroundImage: `url(${image})`, padding: '60px 0px', textAlign: 'center', height: '150px' }}><a href="/upload">
-            <h1 style={{ color: 'white', fontSize: '26px', margin: '0px' }}><b>알수도 있는 사람</b></h1>
+            <p style={{ color: 'white', fontSize: '26px', margin: '0px' }}>알수도 있는 사람</p>
             <p style={{ color: 'white', fontSize: '15px' }}>친구를 찾는데 도움이 됩니다.</p>
         </a>
         
