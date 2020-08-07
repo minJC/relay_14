@@ -8,19 +8,21 @@ const { auth } = require("../middleware/auth");
 
 router.get("/auth", auth, (req, res) => {
     res.header("Access-Control-Allow-Origin", "*"); // 모든 도메인
+    console.log("rerere",res);
     res.status(200).json({
         _id: req.user._id,
         isAdmin: req.user.role === 0 ? false : true,
         isAuth: true,
         email: req.user.email,
         name: req.user.name,
-        lastname: req.user.lastname,
         role: req.user.role,
         image: req.user.image,
         company: req.user.company,
-        skill: req.user.skill,
-        git: req.user.git,
-        intro: req.user.intro
+        school:req.user.school,
+        phone: req.user.phone,
+        birth: req.user.birth,
+        intro: req.user.intro,
+        sex: req.user.sex
     });
 });
 
@@ -73,6 +75,19 @@ router.get("/logout", auth, async (req, res) => {
     } catch (error) {
         console.log(error)
     }
+});
+
+
+router.get("/getUser", (req, res) => {
+    res.header("Access-Control-Allow-Origin", "*"); // 모든 도메인
+    User.find()
+        .exec((err, user) => {
+            if (err) return res.status(400).send(err);
+
+           
+            res.status(200).json({ success: true, user })
+        })
+
 });
 
 module.exports = router;

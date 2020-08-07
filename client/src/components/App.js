@@ -10,6 +10,7 @@ import RegisterPage from "./views/RegisterPage/RegisterPage.js";
 import SearchPage from "./views/SearchPage/SearchPage.js";
 import YouKnowPage from "./views/YouKnowPage/YouKnowPage.js";
 
+
 import NavBar from "./views/NavBar/NavBar";
 import Footer from "./views/Footer/Footer";
 
@@ -33,7 +34,7 @@ function App() {
               component={Auth(RegisterPage, false)}
             />
             <Route exact path="/search" component={Auth(SearchPage, null)} />
-            <Route exact path="/youknow" component={Auth(YouKnowPage, false)} />
+            <Route exact path="/youknow" component={Auth(YouKnowPage, true)} />
           </div>
           <Route component={Auth(NotFoundPage, null)} />
         </Switch>

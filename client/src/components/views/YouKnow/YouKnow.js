@@ -7,7 +7,7 @@ import {BACK_URL} from '../../Link'
 const { Title } = Typography;
 const { Meta } = Card;
 
-function YouKnowPage(props) {
+function YouKnow(props) {
 
     const [Posts, setPosts] = useState([])
     var image = 'https://static.wadiz.kr/main/media/img-fundingopen-pc@2x.3311937d.jpg';
@@ -56,4 +56,4 @@ function YouKnowPage(props) {
     )
 }
 
-export default YouKnowPage
+export default YouKnow

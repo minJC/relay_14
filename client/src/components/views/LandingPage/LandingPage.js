@@ -22,6 +22,7 @@ function LandingPage() {
      </form>
   </div>
   );
+
 }
 
 export default LandingPage;

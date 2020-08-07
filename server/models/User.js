@@ -28,10 +28,19 @@ const userSchema = mongoose.Schema({
     tokenExp: Number,
     resetToken: String,
     resetTokenExp: Number,
-    skill :{
+    company :{
         type: String
     },
-    git :{
+    school :{
+        type: Array
+    },
+    phone :{
+        type: String
+    },
+    school :{
+        type: String
+    },
+    sex :{
         type: String
     },
     intro : {

@@ -50,12 +50,10 @@ function RegisterPage(props) {
         password: '',
         confirmPassword: '',
         company: '',
-        skill:'',
-        skill1:'',
-        skill2:'',
-        skill3:'',
-        skill4:'',
-        git:'',
+        school:'',
+        birth:'',
+        phone:'',
+        sex:'',
         intro:'',
       }}
       validationSchema={Yup.object().shape({
@@ -91,18 +89,22 @@ function RegisterPage(props) {
             email: values.email,
             password: values.password,
             name: values.name,
-            // lastname: values.lastname,
+            company : values.company,
+            school : values.school,
+            birth : values.birth,
+            sex : values.sex,
             image: `http://gravatar.com/avatar/${moment().unix()}?d=identicon`,
-            git: values.git,
-            intro: addEnter(values.intro),
-            skill: (values.skill ? 'C/C++/C# ' : '')+(values.skill1 ? 'JAVA ':'') + (values.skill2 ? 'Python ':'')+(values.skill3 ? 'Script ':'')
-                      +(values.skill4 ? '':'')
+            phone: values.phone,
+            intro: addEnter(values.intro)
           };
 
           dispatch(registerUser(dataToSubmit)).then(response => {
             if (response.payload.success) {
-              props.history.push("/login");
+              //props.history.push("/login");
+              props.history.push("/youknow");
             } else {
+              console.log(response.payload.err.errmsg);
+              alert("중복 아이디입니다. 입력을 다시 확인해주세요")
               alert(response.payload.err.errmsg)
             }
           })
@@ -195,30 +197,56 @@ function RegisterPage(props) {
                 )}
               </Form.Item>
 
-              <Form.Item label="skill" hasFeedback>
-                <Input id="skill" type="checkbox" value={values.skill} onChange={handleChange}
-                  onBlur={handleBlur} style={{marginLeft:'13px', marginRight:'10px'}}/>C/C++/C# 
-                <Input id="skill1" type="checkbox" value={values.skill1} onChange={handleChange}
-                  onBlur={handleBlur} style={{marginLeft:'13px', marginRight:'10px'}}/>JAVA<br/>
-                <Input id="skill2" type="checkbox" value={values.skill2} onChange={handleChange}
-                  onBlur={handleBlur} style={{marginLeft:'13px', marginRight:'10px'}}/>Python 
-                <Input id="skill3" type="checkbox" value={values.skill3} onChange={handleChange}
-                  onBlur={handleBlur} style={{marginLeft:'13px', marginRight:'10px'}}/>Script
-                <Input id="skill4" type="checkbox" value={values.skill4} onChange={handleChange}
-                  onBlur={handleBlur} style={{marginLeft:'13px', marginRight:'10px'}}/>없음<br/>
-              </Form.Item>
-
-              <Form.Item label="GitHub 아이디">
+              <Form.Item label="전화번호">
                 <Input
-                  id="git"
-                  placeholder="Enter your gitHub ID"
+                  id="phone"
+                  placeholder="Enter your 전화번호"
                   type="text"
-                  value={values.git}
+                  value={values.phone}
                   onChange={handleChange}
                   onBlur={handleBlur}
                 />
               </Form.Item>
 
+              <Form.Item label="회사">
+                <Input
+                  id="company"
+                  placeholder="Enter your company"
+                  type="text"
+                  value={values.company}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                />
+              </Form.Item>
+              
+              <Form.Item required label="학교">
+                <Input
+                  id="school"
+                  placeholder="Enter your school"
+                  type="text"
+                  value={values.school}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                />
+              </Form.Item>
+            
+              <Form.Item required label="생년월일">
+                <Input
+                  id="birth"
+                  placeholder="Enter your birth Day"
+                  type="date"
+                  value={values.birth}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                />
+              </Form.Item>
+              <Form.Item label="성별" hasFeedback>
+                <Input id="sex" type="radio" name="sex" value={values.sex} onChange={handleChange}
+                  onBlur={handleBlur} style={{marginLeft:'13px', marginRight:'10px'}}/>여자
+                <Input id="sex" type="radio" name="sex" value={values.sex} onChange={handleChange}
+                  onBlur={handleBlur} style={{marginLeft:'13px', marginRight:'10px'}}/>남자<br/>
+              </Form.Item>
+              
               <Form.Item required label="자기소개">
                 <TextArea
                   id="intro"
@@ -230,7 +258,6 @@ function RegisterPage(props) {
                   style={{width:'100%', height:'100px'}}
                 />
               </Form.Item>
-
 
               <Form.Item {...tailFormItemLayout}>
                 <Button onClick={handleSubmit} type="primary" disabled={isSubmitting}>
