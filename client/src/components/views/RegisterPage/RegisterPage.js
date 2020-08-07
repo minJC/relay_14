@@ -103,7 +103,6 @@ function RegisterPage(props) {
               //props.history.push("/login");
               props.history.push("/youknow");
             } else {
-              console.log(response.payload.err.errmsg);
               alert("중복 아이디입니다. 입력을 다시 확인해주세요")
               alert(response.payload.err.errmsg)
             }

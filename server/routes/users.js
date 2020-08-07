@@ -8,7 +8,7 @@ const { auth } = require("../middleware/auth");
 
 router.get("/auth", auth, (req, res) => {
     res.header("Access-Control-Allow-Origin", "*"); // 모든 도메인
-    console.log("rerere",res);
+    ("rerere",res);
     res.status(200).json({
         _id: req.user._id,
         isAdmin: req.user.role === 0 ? false : true,
@@ -35,7 +35,7 @@ router.post("/register", async (req, res) => {
             success: true
         });
     } catch (err) {
-        console.log(err)
+        (err)
     }
 });
 
@@ -73,7 +73,7 @@ router.get("/logout", auth, async (req, res) => {
             success: true
         });
     } catch (error) {
-        console.log(error)
+        (error)
     }
 });
 

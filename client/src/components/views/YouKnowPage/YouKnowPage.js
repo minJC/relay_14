@@ -16,7 +16,7 @@ function YouKnowPage(props) {
         axios.get(/*localhost123*/'/api/users/getUser')
             .then(response => {
                 if (response.data.success) {
-                    console.log(response.data)
+                    //console.log(response.data)
                     setPosts(response.data.user)
                 } else {
                     alert('Failed to get Posts')
