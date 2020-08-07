@@ -1,14 +1,25 @@
 import React from 'react';
 import { Menu } from 'antd';
 import {Link } from 'react-router-dom';
+import { useSelector } from "react-redux";
 const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
 
 function LeftMenu(props) {
+
+  const user = useSelector(state => state.user);
+  
   return (
     <Menu mode={props.mode}>
       <Menu.Item key="친구추천" style={{marginTop: '5px'}}>
-        <a href="/youknow">친구추천</a>
+        <Link to={{
+                  pathname : `/youknow`,
+                  state : {
+                     user : user.userData
+                  }
+               }}><a href="#">친구추천</a>
+               </Link>
+        
       </Menu.Item>
     </Menu>
   )

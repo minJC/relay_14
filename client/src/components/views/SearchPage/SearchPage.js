@@ -11,9 +11,8 @@ const { Meta } = Card;
 
 
 function SearchPage(props) {
-
-  console.log(props);
-
+  
+  
   //검색창 입력용
   const [key, setKey] = useState('');
   const onChangeKey = e => {
@@ -29,9 +28,8 @@ function SearchPage(props) {
   }
 
 
-
-
-  const [Users, setUsers] = useState([])
+  //검색 결과
+  const [Users, setUsers] = useState([]);
 
   //페이지내에서 재 검색 하기 위한 코드
   const [find, setfind] = useState(0);
@@ -50,7 +48,7 @@ function SearchPage(props) {
 
 
 
-
+  //검색 결과 유저목록 받아오기
   useEffect(() => {
     axios.post(/*localhost123*/'/api/users/searchUser', searchVariable)
       .then(response => {

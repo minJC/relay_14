@@ -104,14 +104,33 @@ router.get("/logout", auth, async (req, res) => {
 
 
 //알수도 있는 사람 기능 구현
-router.get("/getUser", (req, res) => {
+router.post("/getUser", (req, res) => {
     res.header("Access-Control-Allow-Origin", "*"); // 모든 도메인
-    User.find()
+    // if(!req.body.userId.user){
+    //     res.status(400).json({ success: false })
+    // }else
+    //console.log(req.body.userId.userData);
+    User.find({ _id: req.body.userId.userData._id })
         .exec((err, user) => {
-            if (err) return res.status(400).send(err);
+            //console.log(user[0].tag);
+            //if (err) return res.status(400).send(err);
 
+            let data = []
+            let temp = user[0].tag
+            temp.forEach((el) => {
+                let tempObj= new Object;
+                tempObj.tag = el;
+                data[data.length] = tempObj;
+            })
+            res.status(200).json({ success: true, user})
+            // let str = { $or: data}                           //키워드값 or검색
+            // User.find(str)
+            //     .exec((err, users) => {
+            //         //console.log(err, user);
+            //         if (err) return res.status(400).send(err);
+            //         res.status(200).json({ success: true, users })
+            //     })
 
-            res.status(200).json({ success: true, user })
         })
 
 });
@@ -136,21 +155,21 @@ router.post("/searchUser", async (req, res) => {
                     let data = [];
                     temp.forEach(element => {
                         let temp = element.split("\(");
-                        if(temp[0]!='대학교'&&temp[0]!='고등학교'&&temp[0]!='중학교'&&temp[0]!='초등학교'&&temp[0]!='학교'){
-                            let tempObj= new Object;
-                            tempObj.tag=temp[0];
-                            data[data.length]=tempObj;              //object 형태로 배열에 저장
+                        if (temp[0] != '대학교' && temp[0] != '고등학교' && temp[0] != '중학교' && temp[0] != '초등학교' && temp[0] != '학교') {
+                            let tempObj = new Object;
+                            tempObj.tag = temp[0];
+                            data[data.length] = tempObj;              //object 형태로 배열에 저장
                         }
                     });
                     resultNLP = response.data.phrases;               //검색 결과 배열에 저장
 
-                    let str ={$or: data }                           //키워드값 or검색
-                        User.find(str)
-                            .exec((err, user) => {
-                                console.log(err,user);
-                                if (err) return res.status(400).send(err);
-                                res.status(200).json({ success: true, user })
-                            })
+                    let str = { $or: data }                           //키워드값 or검색
+                    User.find(str)
+                        .exec((err, user) => {
+                            console.log(err, user);
+                            if (err) return res.status(400).send(err);
+                            res.status(200).json({ success: true, user })
+                        })
                 } else {
                     console.log("error:", response.data.parases);
                 }

@@ -8,31 +8,30 @@ const { Meta } = Card;
 
 function YouKnowPage(props) {
 
-    const [Posts, setPosts] = useState([])
+    const [Users, setUsers] = useState([])
     var image = 'https://static.wadiz.kr/main/media/img-fundingopen-pc@2x.3311937d.jpg';
+    const user = useSelector(state => state.user)
+    const UserVariable = {
+        userId: user
+    }
+    console.log("console.log(user);",Users);
     useEffect(() => {
-        axios.get(/*localhost123*/'/api/users/getUser')
-            .then(response => {
-                if (response.data.success) {
-                    //console.log(response.data)
-                    setPosts(response.data.user)
-                } else {
-                    alert('Failed to get User Data')
-                }
-            })
+        
+            axios.post(/*localhost123*/'/api/users/getUser',UserVariable)
+                .then(response => {
+                    if (response.data.success) {
+                        setUsers(response.data.user)
+                    } else {
+                        console.log("fail");
+                        alert('Failed to get User Data')
+                    }
+                })
     }, [])
 
-    const user = useSelector(state => state.user)
-    console.log("userData=",user);
-    // if (user.userData && user.userData.isAuth) {
-    //     loginOrNot = 1
-    //     //console.log("userdata="+user.userData+" "+user.userData.isAuth)
-    // }
-
-
-    const renderCards = Posts.map((users, index) => {
-
-
+  
+    if (Users) {
+        
+    const renderCards = Users.map((users, index) => {
         return <Col lg={6} md={8} xs={24} style={{ marginBottom: '40px' }}>
            
             <div style={{ position: 'relative', margin: '0px 10px', width:'150px', height: '150px', overflow: 'hidden', border: '1px solid rgba(0,0,0,.2)', borderRadius: '10px 10px' }}>
@@ -42,6 +41,7 @@ function YouKnowPage(props) {
         </Col>
  
     })
+
 
 
     
@@ -59,6 +59,31 @@ function YouKnowPage(props) {
         
     </div>
     )
+    }else{
+        console.log("console.log(user);",Users);
+        axios.post(/*localhost123*/'/api/users/getUser',UserVariable)
+                .then(response => {
+                    if (response.data.success) {
+                        setUsers(response.data.user)
+                    } else {
+                        console.log("fail");
+                        alert('Failed to get User Data')
+                    }
+                })
+        return (<div style={{ width: '100%', overflow: 'hidden' }}>
+                <section id='mainsection' style={{ backgroundImage: `url(${image})`, padding: '60px 0px', textAlign: 'center', height: '150px' }}><a href="/upload">
+                    <p style={{ color: 'white', fontSize: '26px', margin: '0px' }}>알수도 있는 사람</p>
+                    <p style={{ color: 'white', fontSize: '15px' }}>친구를 찾는데 도움이 됩니다.</p>
+                </a>
+                
+                </section>
+                <br/><br/><br/>
+                    추천할만한 친구가 없습니다.
+        
+                
+            </div>
+        )
+    }
 }
 
 export default YouKnowPage
