@@ -19,7 +19,7 @@ function YouKnowPage(props) {
                     //console.log(response.data)
                     setPosts(response.data.user)
                 } else {
-                    alert('Failed to get Posts')
+                    alert('Failed to get User Data')
                 }
             })
     }, [])

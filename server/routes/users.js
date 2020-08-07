@@ -2,10 +2,12 @@ const express = require('express');
 const router = express.Router();
 const { User } = require("../models/User");
 const { auth } = require("../middleware/auth");
+const axios = require("axios");
 //=================================
 //             User
 //=================================
 
+//인증부분
 router.get("/auth", auth, (req, res) => {
     res.header("Access-Control-Allow-Origin", "*"); // 모든 도메인
     ("rerere",res);
@@ -26,6 +28,7 @@ router.get("/auth", auth, (req, res) => {
     });
 });
 
+//회원가입
 router.post("/register", async (req, res) => {
     res.header("Access-Control-Allow-Origin", "*"); // 모든 도메인
     const user = new User(req.body);
@@ -39,6 +42,7 @@ router.post("/register", async (req, res) => {
     }
 });
 
+//로그인
 router.post("/login", (req, res) => {
     res.header("Access-Control-Allow-Origin", "*"); // 모든 도메인
     User.findOne({ email: req.body.email }, (err, user) => {
@@ -65,6 +69,7 @@ router.post("/login", (req, res) => {
     });
 });
 
+//로그아웃
 router.get("/logout", auth, async (req, res) => {
     res.header("Access-Control-Allow-Origin", "*"); // 모든 도메인
     try {
@@ -78,6 +83,7 @@ router.get("/logout", auth, async (req, res) => {
 });
 
 
+//알수도 있는 사람 기능 구현
 router.get("/getUser", (req, res) => {
     res.header("Access-Control-Allow-Origin", "*"); // 모든 도메인
     User.find()
@@ -89,5 +95,47 @@ router.get("/getUser", (req, res) => {
         })
 
 });
+
+
+
+
+//검색 기능 구현
+router.post("/searchUser", async (req, res) => {
+    res.header("Access-Control-Allow-Origin", "*"); // 모든 도메인
+    console.log(req.body.keyword);
+    var keyword = req.body.keyword;
+    keyword.replace(" ","");
+
+    var resultNLP;
+
+    try {
+        await axios.get(`https://open-korean-text-api.herokuapp.com/tokenize?text=`+encodeURI(keyword))
+        .then(response => {
+          if (response.data) {
+                resultNLP=response.data.token_strings;               //검색 결과 배열에 저장
+                console.log(resultNLP);
+                User.find({$text:{$search:"류찬규"}})
+                    .exec((err, user) => {
+                        console.log(err);
+                        if (err) return res.status(400).send(err);
+                        console.log("user",user)
+                        res.status(200).json({ success: true, user })
+                    })
+          } else {
+              console.log("error:",response.data.token_strings);
+          }
+        }) 
+    } catch (error) {
+        console.log(error)
+    }
+    
+    
+
+
+    
+
+    
+});
+
 
 module.exports = router;

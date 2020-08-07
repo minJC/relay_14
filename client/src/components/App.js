@@ -34,6 +34,7 @@ function App() {
               component={Auth(RegisterPage, false)}
             />
             <Route exact path="/search" component={Auth(SearchPage, null)} />
+            <Route exact path="/search/:key" component={Auth(SearchPage, null)} />
             <Route exact path="/youknow" component={Auth(YouKnowPage, true)} />
           </div>
           <Route component={Auth(NotFoundPage, null)} />
