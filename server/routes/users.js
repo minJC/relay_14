@@ -30,18 +30,6 @@ router.get("/auth", auth, async (req, res) => {
     });
 });
 
-//db에 데이터 저장
-async function saveData(req) {
-    const user = new User(req.body);
-    try {
-        await user.save()
-        return res.status(200).json({
-            success: true
-        });
-    } catch (err) {
-        return (err)
-    }
-}
 
 //회원가입
 router.post("/register", async (req, res) => {
@@ -148,8 +136,8 @@ router.post("/searchUser", async (req, res) => {
             .then(response => {
                 if (response.data) {
                     resultNLP = response.data.token_strings;               //검색 결과 배열에 저장
-                    console.log(resultNLP);
-                    User.find({ $text: { $search: "류찬규" } })
+                    console.log(resultNLP[0]);
+                    User.find({'tag' : `${resultNLP[0]}`})
                         .exec((err, user) => {
                             console.log(err);
                             if (err) return res.status(400).send(err);
