@@ -34,11 +34,18 @@ router.post("/register", async (req, res) => {
     let keyword = req.body.school + " " + req.body.name + " " + req.body.company + " " + req.body.sex + " " + req.body.birth;
 
     try {
-        await axios.get(`https://open-korean-text-api.herokuapp.com/tokenize?text=` + encodeURI(keyword))
+        await axios.get(`https://open-korean-text-api.herokuapp.com/extractPhrases?text=` + encodeURI(keyword))
             .then(response => {
                 if (response.data) {
-                    req.body.tag = response.data.token_strings;
-                    console.log(req.body);
+                    let temp = response.data.phrases;
+                    let data = [];
+                    temp.forEach(element => {
+                        let temp = element.split("\(");
+                        if (temp[0] != '대학교' && temp[0] != '고등학교' && temp[0] != '중학교' && temp[0] != '초등학교' && temp[0] != '학교') {
+                            data[data.length] = temp[0];              //object 형태로 배열에 저장
+                        }
+                    });
+                    req.body.tag = data;
                     const user = new User(req.body);
                     try {
                         user.save()
@@ -63,7 +70,7 @@ router.post("/register", async (req, res) => {
 });
 
 //로그인
-router.post("/login",  (req, res) => {
+router.post("/login", (req, res) => {
     res.header("Access-Control-Allow-Origin", "*"); // 모든 도메인
     User.findOne({ email: req.body.email }, (err, user) => {
         if (!user)
@@ -110,35 +117,36 @@ router.post("/getUser", (req, res) => {
     //     res.status(400).json({ success: false })
     // }else
     //console.log(req.body.userId.userData);
-    try{
-    User.find({ _id: req.body.userId.userData._id })
-        .exec((err, user) => {
-            //console.log(user[0].tag);
-            //if (err) return res.status(400).send(err);
-            let data = []
-            let temp
-            try{
-                temp = user[0].tag
-            }catch{
-                return res.status(400).send("e");
-            }
-            temp.forEach((el) => {
-                let tempObj= new Object;
-                tempObj.tag = el;
-                data[data.length] = tempObj;
+    try {
+        User.find({ _id: req.body.userId.userData._id })
+            .exec((err, user) => {
+                //console.log(user[0].tag);
+                //if (err) return res.status(400).send(err);
+                let data = [];
+                let temp;
+                try {
+                    temp = user[0].tag
+                } catch{
+                    return res.status(400).send("e");
+                }
+                console.log("Tag=", temp);
+                temp.forEach((el) => {
+                    let tempObj = new Object;
+                    tempObj.tag = el;
+                    data[data.length] = tempObj;
+                })
+                
+                //res.status(200).json({ success: true, user})                //현재 자기자신 리턴
+                let str = { $or: data }                           //키워드값 or검색
+                console.log("let str=", str);
+                User.find(str)
+                    .exec((err, user) => {
+                        console.log(err, user);
+                        if (err) return res.status(400).send(err);
+                        res.status(200).json({ success: true, user })
+                    })
             })
-            console.log(user);
-            res.status(200).json({ success: true, user})                //현재 자기자신 리턴
-            // let str = { $or: data}                           //키워드값 or검색
-            // User.find(str)
-            //     .exec((err, users) => {
-            //         //console.log(err, user);
-            //         if (err) return res.status(400).send(err);
-            //         res.status(200).json({ success: true, users })
-            //     })
-
-        })
-    }catch(e){
+    } catch (e) {
         return res.status(400).send("e");
     }
 
@@ -171,7 +179,7 @@ router.post("/searchUser", async (req, res) => {
                         }
                     });
                     resultNLP = response.data.phrases;               //검색 결과 배열에 저장
-
+                    console.log(data);
                     let str = { $or: data }                           //키워드값 or검색
                     User.find(str)
                         .exec((err, user) => {
