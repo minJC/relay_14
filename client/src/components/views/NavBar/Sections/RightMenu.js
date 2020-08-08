@@ -19,6 +19,11 @@ function RightMenu(props) {
         }
       })
   };
+
+  
+  if(user.loginSucces && user.loginSucces.loginSuccess && user.userData && !user.userData.isAuth) {
+    window.location.replace("/");         //수동 새로고침 proxy 사용 문제로 인해서...
+  }
   if (user.userData && !user.userData.isAuth) {
     return (
       <Menu mode={props.mode}>

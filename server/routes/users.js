@@ -63,7 +63,7 @@ router.post("/register", async (req, res) => {
 });
 
 //로그인
-router.post("/login", (req, res) => {
+router.post("/login",  (req, res) => {
     res.header("Access-Control-Allow-Origin", "*"); // 모든 도메인
     User.findOne({ email: req.body.email }, (err, user) => {
         if (!user)
@@ -110,19 +110,25 @@ router.post("/getUser", (req, res) => {
     //     res.status(400).json({ success: false })
     // }else
     //console.log(req.body.userId.userData);
+    try{
     User.find({ _id: req.body.userId.userData._id })
         .exec((err, user) => {
             //console.log(user[0].tag);
             //if (err) return res.status(400).send(err);
-
             let data = []
-            let temp = user[0].tag
+            let temp
+            try{
+                temp = user[0].tag
+            }catch{
+                return res.status(400).send("e");
+            }
             temp.forEach((el) => {
                 let tempObj= new Object;
                 tempObj.tag = el;
                 data[data.length] = tempObj;
             })
-            res.status(200).json({ success: true, user})
+            console.log(user);
+            res.status(200).json({ success: true, user})                //현재 자기자신 리턴
             // let str = { $or: data}                           //키워드값 or검색
             // User.find(str)
             //     .exec((err, users) => {
@@ -132,6 +138,9 @@ router.post("/getUser", (req, res) => {
             //     })
 
         })
+    }catch(e){
+        return res.status(400).send("e");
+    }
 
 });
 

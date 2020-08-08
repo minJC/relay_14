@@ -14,9 +14,10 @@ function YouKnowPage(props) {
     const UserVariable = {
         userId: user
     }
-    console.log("console.log(user);",Users);
+    console.log("console.log(user);",props);
+    
     useEffect(() => {
-        
+            if(user)
             axios.post(/*localhost123*/'/api/users/getUser',UserVariable)
                 .then(response => {
                     if (response.data.success) {

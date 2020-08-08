@@ -17,7 +17,7 @@ function LeftMenu(props) {
                   state : {
                      user : user.userData
                   }
-               }}><a href="#">친구추천</a>
+               }}><span>친구추천</span>
                </Link>
         
       </Menu.Item>
