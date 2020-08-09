@@ -3,7 +3,7 @@ import { withRouter } from "react-router-dom";
 import { Route, Link } from 'react-router-dom';
 import { Card, Avatar, Col, Typography, Row, Button } from 'antd';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
-import FollowBtn from './FollowBtn/Follow';
+import FollowerBtn from './FollowBtn/Follower';
 import axios from 'axios';
 import * as Yup from "yup";
 import "./SearchPage.css";
@@ -13,8 +13,8 @@ const { Meta } = Card;
 
 
 function SearchPage(props) {
-  
-  console.log("fff",props.user.userData);
+
+  console.log(props);
   //검색창 입력용
   const [key, setKey] = useState(props.location.state.key);
   const onChangeKey = e => {
@@ -42,6 +42,7 @@ function SearchPage(props) {
   //페이지내에서 재 검색 하기 위한 코드
   const [find, setfind] = useState(0);
   useEffect(() => {
+    
     axios.post('/api/users/searchUser', searchVariable)
       .then(response => {
         if (response.data.success) {
@@ -119,7 +120,7 @@ function SearchPage(props) {
   const renderCards = Users.map((users, index) => {
       console.log(followArr);
       return <div class="people_item">
-        <FollowBtn userFrom={props.user.userData} userTo={users} follow={Follow}/>
+        <FollowerBtn userFrom={props.user.userData} userTo={users} follow={Follow}/>
         <div class="people_item_top">
           <img class="people_img" src={`${users.image}`} alt="profile_img"></img>
           <div class="people_content">

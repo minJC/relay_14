@@ -8,10 +8,12 @@ const key = require('../config/key');
 //             Follow
 //=================================
 
+
+//팔로우
 router.post("/followFriend", (req, res) => {
     res.header("Access-Control-Allow-Origin", "*"); // 모든 도메인
     console.log("followFriend");
-    const follow = new Follow(req.body);
+    const follow = new Follow({userFrom:req.body.userFrom._id, userTo:req.body.userTo._id });
     try {
         follow.save()
         return res.status(200).json({ success: true })
@@ -19,15 +21,32 @@ router.post("/followFriend", (req, res) => {
         return (err)
      }
 });
+
+
+//언팔
 router.post("/unfollowFriend", (req, res) => {
     res.header("Access-Control-Allow-Origin", "*"); // 모든 도메인
     console.log("undfollowFriend", req.body);
     try {
-        Follow.deleteMany(req.body)
-                .exec((err, user) => {
-                    //console.log(err, user);
+        Follow.findOneAndDelete({userFrom:req.body.userFrom._id, userTo:req.body.userTo._id })
+        .exec((err, doc)=>{
+            if(err) return res.status(400).json({ success: false, err});
+            res.status(200).json({ success: true, doc })
+        })
+    } catch (err) {
+        return (err)
+     }
+});
+
+router.post("/isfollow", (req, res) => {
+    res.header("Access-Control-Allow-Origin", "*"); // 모든 도메인
+    console.log("isfollow", req.body);
+    try {
+        Follow.find({userFrom:req.body.userFrom._id, userTo:req.body.userTo._id })
+                .exec((err,user) => {
+                    console.log(user);
                     if (err) return res.status(400).send(err);
-                    return res.status(200).json({ success: true })
+                    return res.status(200).json({ success: true, isfollow:user })
                 })
         
     } catch (err) {
@@ -36,6 +55,7 @@ router.post("/unfollowFriend", (req, res) => {
 });
 
 
+//팔로우 목록
 router.post("/getlist", (req, res) => {
     res.header("Access-Control-Allow-Origin", "*"); // 모든 도메인
     Follow.find(req.body.userFrom)

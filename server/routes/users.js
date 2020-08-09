@@ -9,6 +9,7 @@ const key = require('../config/key');
 //             User
 //=================================
 
+//인증
 router.get("/auth", auth, async (req, res) => {
     res.header("Access-Control-Allow-Origin", "*"); // 모든 도메인
     res.status(200).json({
@@ -70,50 +71,8 @@ router.post("/register", async (req, res) => {
         console.log(error)
         return false;
     }
-
-    /*  //기존 태그 분할 api    //korean - text extract Phrases
-    try {
-        await axios.get(`https://open-korean-text-api.herokuapp.com/extractPhrases?text=` + encodeURI(keyword))           //korean - text extract Phrases
-        //await axios.get(`http://27.96.135.159:8080/api/tag/` + encodeURI(keyword))
-            .then(response => {
-                if (response.data) {
-                    let temp = response.data.phrases;
-                    let data = [];
-                    console.log(response.data);
-                    if(temp.length<2){
-                        let temps = temp.split("\(");
-                        data= temps[0];
-                    }else{
-                        temp.forEach(element => {
-                            let temp = element.split("\(");
-                            if (temp[0] != '대학교' && temp[0] != '고등학교' && temp[0] != '중학교' && temp[0] != '초등학교' && temp[0] != '학교') {
-                                data[data.length] = temp[0];              //object 형태로 배열에 저장
-                            }
-                        });
-                    }
-                    req.body.tag = data;
-                    const user = new User(req.body);
-                    try {
-                        user.save()
-                        return res.status(200).json({
-                            success: true
-                        });
-                    } catch (err) {
-                        return (err)
-                    }
-                } else {
-                    console.log("error:", response.data.token_strings);
-                    return false;
-                }
-            })
-    } catch (error) {
-        console.log(error)
-        return false;
-    }
-
-*/
-
 });
+
 
 //로그인
 router.post("/login", (req, res) => {
@@ -142,6 +101,7 @@ router.post("/login", (req, res) => {
     });
 });
 
+
 //로그아웃
 router.get("/logout", auth, async (req, res) => {
     res.header("Access-Control-Allow-Origin", "*"); // 모든 도메인
@@ -154,6 +114,7 @@ router.get("/logout", auth, async (req, res) => {
         console.log(error)
     }
 });
+
 
 //알수도 있는 사람 기능 구현
 router.post("/getUser", (req, res) => {
@@ -199,7 +160,6 @@ router.post("/searchUser", async (req, res) => {
     res.header("Access-Control-Allow-Origin", "*"); // 모든 도메인
     console.log(req.body.keyword);
     var keyword = req.body.keyword;
-
     try {
         await axios.get(`http://27.96.135.159:8080/api/tag/` + encodeURI(keyword))
             .then(response => {
@@ -240,67 +200,6 @@ router.post("/searchUser", async (req, res) => {
     } catch (error) {
         console.log(error)
     }
-
-
-
-
-
-
-/*     기존 태그분할 api
-    try {
-        //await axios.get(`https://open-korean-text-api.herokuapp.com/extractPhrases?text=` + encodeURI(keyword))
-        await axios.get(`https://open-korean-text-api.herokuapp.com/extractPhrases?text=` + encodeURI(keyword))
-            .then(response => {
-                if (response.data) {
-                    let temps = response.data.phrases;
-                    let data = [];
-                    console.log("rese",temps);
-                    if(temps.length<2){
-                            let temp = temps[0].split("\(");
-                            if (temp[0] != '대학교' && temp[0] != '고등학교' && temp[0] != '중학교' && temp[0] != '초등학교' && temp[0] != '학교') {
-                                let tempObj = new Object;
-                                tempObj.tag = temp[0];
-                                data = tempObj;              //object 형태로 배열에 저장
-                            }
-                    }else{
-                        temps.forEach(element => {
-                            let temp = element.split("\(");
-                            if (temp[0] != '대학교' && temp[0] != '고등학교' && temp[0] != '중학교' && temp[0] != '초등학교' && temp[0] != '학교') {
-                                let tempObj = new Object;
-                                tempObj.tag = temp[0];
-                                data[data.length] = tempObj;              //object 형태로 배열에 저장
-                            }
-                        });
-                    }
-                    
-                    let str = { $or: data }                           //키워드값 or검색
-                    if(temps.length<2){
-                        str = data;
-                    }
-                    console.log(data,str);
-                    User.find(str)
-                        .exec((err, user) => {
-                            console.log(err, user);
-                            if (err) return res.status(400).send(err);
-                            res.status(200).json({ success: true, user })
-                        })
-                } else {
-                    console.log("error:", response.data.parases);
-                }
-            })
-    } catch (error) {
-        console.log(error)
-    }
-
-*/
-
 });
-router.post("/getlist", (req, res) => {
-    res.header("Access-Control-Allow-Origin", "*"); // 모든 도메인
-    console.log("listlistlistlistlistlistlistlist",req.body);
-    if (err) return res.status(400).send(err);
-
-});
-
 
 module.exports = router;

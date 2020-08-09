@@ -64,6 +64,7 @@ function LandingPage(props) {
                }}>
                   <span class="material-icons">🔍</span>
                </Link>
+         
             </div>
          </form>
       </div>

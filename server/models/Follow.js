@@ -3,11 +3,11 @@ const Schema = mongoose.Schema;
 
 const followSchema = mongoose.Schema({
    userFrom: {
-       type: Schema.Types.ObjectId,
+       type: String,
        ref: 'userFrom'
    },
    userTo: {
-       type: Schema.Types.ObjectId,
+       type: String,
        ref: 'userTo'
    }
 
