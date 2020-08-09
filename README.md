@@ -11,5 +11,6 @@
 
 
 ## 기능 A구현
-- [인공지능 관련]()
-- [Front, Back]()
+- [Front, Back](https://github.com/boostcamp-2020/relay_14/wiki/%EA%B8%B0%EB%8A%A5-A---Front,-Back)
+- [인공지능 관련](https://github.com/boostcamp-2020/relay_14/wiki/%EA%B8%B0%EB%8A%A5-A---%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5-%EA%B4%80%EB%A0%A8)
+- [수정 가이드](https://github.com/boostcamp-2020/relay_14/wiki/%EA%B8%B0%EB%8A%A5-A---%EC%88%98%EC%A0%95-%EA%B0%80%EC%9D%B4%EB%93%9C)
