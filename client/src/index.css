@@ -4,6 +4,7 @@ body {
     "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
 }
 
 code {
@@ -36,14 +37,16 @@ pre {
 }
 
 .wrapper {
+  background-color : white;
   width: 100%;
   height: auto;
   min-height: 100vh;
 }
 
 .contentsWrap {
+  width : 100%;
   position: relative;
-  max-width: 1200px;
+  max-width: 1200px; 
   margin: 0px auto 0px;
   padding: 16px 16px 50px;
   box-sizing: border-box;
@@ -165,3 +168,4 @@ pre {
   }
 
 }
+
