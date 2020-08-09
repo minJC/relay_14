@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { withRouter } from "react-router-dom";
 import { Route, Link } from 'react-router-dom';
 import { Card, Avatar, Col, Typography, Row, Button } from 'antd';
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import axios from 'axios';
 import * as Yup from "yup";
 import "./SearchPage.css";
@@ -14,14 +15,14 @@ function SearchPage(props) {
   
 
   //검색창 입력용
-  const [key, setKey] = useState('');
+  const [key, setKey] = useState(props.location.state.key);
   const onChangeKey = e => {
     setKey(e.target.value);
   };
 
   useEffect(() => {
   }, [key]);
-
+  
   //input focus 일때 enter키 입력시 
   const handleKeyPress = (event) => {
     if(event.key == 'Enter'){
@@ -29,14 +30,14 @@ function SearchPage(props) {
       console.log('enter press here! ')
     }
   }
-
+  
   const searchVariable = {
-    keyword: props.location.state.key
+    keyword: key
   }
-
-
+  
   //검색 결과
   const [Users, setUsers] = useState([]);
+  
 
   //페이지내에서 재 검색 하기 위한 코드
   const [find, setfind] = useState(0);
@@ -66,6 +67,18 @@ function SearchPage(props) {
       })
   }, [])
 
+    //voice recognition 기능 추가
+    const commands = [                     //command
+      {
+        command: '*',                              //모든 언어 정규식
+        callback: () => setKey(transcript)         //입력이 완료 되면 setKey();
+      }
+   ];
+   const { transcript, resetTranscript, listening } = useSpeechRecognition({commands})
+   if (!SpeechRecognition.browserSupportsSpeechRecognition()) {
+      return null
+   }
+
 
   const renderCards = Users.map((users, index) => {
       return <div class="people_item">
@@ -93,11 +106,11 @@ function SearchPage(props) {
       <div class="top">
         <h1 class="search_title">우리들의 고여버린 기억</h1>
         <form class="search_box">
-          <input class="main_input" type="text" placeholder="키워드" defaultValue={`${props.location.state.key}`} 
+          <input class="main_input" type="text" placeholder="키워드" Value={key} 
                onChange={onChangeKey} onKeyPress={handleKeyPress} onSubmit={e => { e.preventDefault(); }}
             />
           <div class="icon_box">
-            <button class="mike_button"><span class="material-icons">👄</span></button>
+            <span class="mike_button" onClick={()=>{setKey("");SpeechRecognition.startListening()}}><span class="material-icons">👄</span></span>
             <Link to={{
               pathname: `/search/${key}`,
               state: {

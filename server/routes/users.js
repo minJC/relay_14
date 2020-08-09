@@ -207,11 +207,9 @@ router.post("/searchUser", async (req, res) => {
                     let data = [];
                     if(temps.length<2){
                             let temp = temps;
-                            if (temp != '대학교' && temp != '고등학교' && temp != '중학교' && temp != '초등학교' && temp != '학교') {
-                                let tempObj = new Object;
-                                tempObj.tag = temp[0];
-                                data[data.length] = tempObj;               //object 형태로 배열에 저장
-                            }
+                            let tempObj = new Object;
+                            tempObj.tag = temp[0];
+                            data[data.length] = tempObj;               //object 형태로 배열에 저장
                     }else{
                         temps.forEach(element => {
                             let temp = element
@@ -224,9 +222,9 @@ router.post("/searchUser", async (req, res) => {
                     }
                     
                     let str = { $or: data }                           //키워드값 or검색
-                    // if(temps.length<2){
-                    //     str = data;
-                    // }
+                    if(temps.length<2){
+                        str = data[0];
+                    }
                     console.log(data,str);
                     User.find(str)
                         .exec((err, user) => {
