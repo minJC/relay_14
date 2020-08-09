@@ -3,6 +3,7 @@ import { withRouter } from "react-router-dom";
 import { Route, Link } from 'react-router-dom';
 import { Card, Avatar, Col, Typography, Row, Button } from 'antd';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+import FollowBtn from './FollowBtn/Follow';
 import axios from 'axios';
 import * as Yup from "yup";
 import "./SearchPage.css";
@@ -13,7 +14,7 @@ const { Meta } = Card;
 
 function SearchPage(props) {
   
-
+  console.log("fff",props.user.userData);
   //검색창 입력용
   const [key, setKey] = useState(props.location.state.key);
   const onChangeKey = e => {
@@ -38,7 +39,6 @@ function SearchPage(props) {
   //검색 결과
   const [Users, setUsers] = useState([]);
   
-
   //페이지내에서 재 검색 하기 위한 코드
   const [find, setfind] = useState(0);
   useEffect(() => {
@@ -50,11 +50,32 @@ function SearchPage(props) {
           alert('Failed to get User Data')
         }
       })
-
+      // 
   }, [find]);
 
 
-  //검색 결과 유저목록 받아오기
+  //following 기능
+  const [Follow, setFollow] = useState([]);
+  let followArr = [];
+  const [propData, setPropData] = useState(props.user.userData);
+  useEffect(() => {
+    const userVariable = {
+      userFrom: props.user.userData
+    }
+    axios.post('/api/follow/getlist',userVariable)       //follow친구 목록 가져오기
+      .then(response => { 
+        if (response.data.success) {
+          setFollow(response.data.user)
+        } else {
+          alert('Failed to get Follow Data')
+        }
+      })
+    
+  }, [propData]);
+
+
+  
+  //유저목록 받아오기
   useEffect(() => {
     axios.post('/api/users/searchUser', searchVariable)
       .then(response => {
@@ -65,6 +86,17 @@ function SearchPage(props) {
           alert('Failed to get User Data')
         }
       })
+      const userVariable = {
+        userFrom: props.user.userData
+      }
+      axios.post('/api/follow/getlist',userVariable)       //follow친구 목록 가져오기
+        .then(response => { 
+          if (response.data.success) {
+            setFollow(response.data.user)
+          } else {
+            alert('Failed to get Follow Data')
+          }
+        })
   }, [])
 
     //voice recognition 기능 추가
@@ -79,10 +111,15 @@ function SearchPage(props) {
       return null
    }
 
+   
+
+
+
 
   const renderCards = Users.map((users, index) => {
+      console.log(followArr);
       return <div class="people_item">
-        <button class="plus_button">♡</button>
+        <FollowBtn userFrom={props.user.userData} userTo={users} follow={Follow}/>
         <div class="people_item_top">
           <img class="people_img" src={`${users.image}`} alt="profile_img"></img>
           <div class="people_content">
@@ -121,11 +158,6 @@ function SearchPage(props) {
             </Link>
           </div>
         </form>
-        {/* <div class="tag_box">
-          <span class="tag_item">군자초</span>
-          <span class="tag_item">18기</span>
-          <span class="tag_item">보이스카우트</span>
-        </div> */}
       </div>
       <div class="people_main_box">
         <p class="people_main_title">혹시, 너도 고였니?😉</p>

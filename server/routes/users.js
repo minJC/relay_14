@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { User } = require("../models/User");
+const { Follow } = require("../models/Follow");
 const { auth } = require("../middleware/auth");
 const axios = require("axios");
 const key = require('../config/key');
@@ -225,10 +226,10 @@ router.post("/searchUser", async (req, res) => {
                     if(temps.length<2){
                         str = data[0];
                     }
-                    console.log(data,str);
+                    //console.log(data,str);
                     User.find(str)
                         .exec((err, user) => {
-                            console.log(err, user);
+                            //console.log(err, user);
                             if (err) return res.status(400).send(err);
                             res.status(200).json({ success: true, user })
                         })
@@ -293,9 +294,11 @@ router.post("/searchUser", async (req, res) => {
 
 */
 
-
-
-
+});
+router.post("/getlist", (req, res) => {
+    res.header("Access-Control-Allow-Origin", "*"); // 모든 도메인
+    console.log("listlistlistlistlistlistlistlist",req.body);
+    if (err) return res.status(400).send(err);
 
 });
 

@@ -64,7 +64,6 @@ function LandingPage(props) {
                }}>
                   <span class="material-icons">🔍</span>
                </Link>
-               {/* <a href="/test">test</a> */}
             </div>
          </form>
       </div>

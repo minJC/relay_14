@@ -30,8 +30,6 @@ function YouKnowPage(props) {
                 })
     }, [])
 
-
-
     let friendsArray = [""];
 
     const addFriend = (userData) => {
@@ -56,14 +54,7 @@ function YouKnowPage(props) {
         }
     }
 
-    let con = (i) => {
-        console.log("i" + i);
-    }
-
-
-
     if (Users.length != 0) {            //서버에서 유저 데이터를 전달 받았을 경우
-
         const renderCards = Users.map((users, index) => {
             return <Col lg={6} md={8} xs={24} >
                 <div style={cardStyle()} onClick={() => { addFriend(users) }}>

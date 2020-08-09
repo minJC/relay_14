@@ -10,8 +10,6 @@ import RegisterPage from "./views/RegisterPage/RegisterPage.js";
 import SearchPage from "./views/SearchPage/SearchPage.js";
 import YouKnowPage from "./views/YouKnowPage/YouKnowPage.js";
 
-import test from "./views/LandingPage/test.js";
-
 import NavBar from "./views/NavBar/NavBar";
 import Footer from "./views/Footer/Footer";
 
@@ -29,9 +27,6 @@ function App() {
           <div className="contentsWrap">
             <Route exact path="/" component={Auth(LandingPage, null)} />
             <Route exact path="/login" component={Auth(LoginPage, false)} />
-
-
-            <Route exact path="/test" component={Auth(test, null)} />
             <Route
               exact
               path="/register"
