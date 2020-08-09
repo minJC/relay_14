@@ -15,33 +15,29 @@ const { Meta } = Card;
 function LandingPage(props) {
    const dispatch = useDispatch();
    const [key, setKey] = useState('');
-   console.log(props)
+
     const onChangeKey = e => {
-      console.log(e.target.value);
       setKey(e.target.value);
     };
 
     useEffect(() => {
-      
     }, [key]);
 
     //input focus 일때 enter키 입력시 
     const handleKeyPress = (event) => {
       if(event.key == 'Enter'){
          alert("검색 버튼을 클릭해 주세요")
-        console.log('enter press here! ')
+         console.log('enter press here! ')
       }
     }
     
-    
-
    return (
       <div class="main">
          <h1 class="main_title">우리들의<br />고여버린 기억💦</h1>
          <form class="main_box" onSubmit="return false">
             
             <input class="main_input" type="text" placeholder="키워드"
-               onChange={onChangeKey} onKeyPress={handleKeyPress} onSubmit={e => { e.preventDefault(); }}
+               onChange={onChangeKey} onKeyPress={handleKeyPress} onSubmit={e => { e.preventDefault();}}
             />
             <div class="icon_box">
                <button class="mike_button"><span class="material-icons">👄</span></button>

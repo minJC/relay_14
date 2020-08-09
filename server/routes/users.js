@@ -33,18 +33,23 @@ router.post("/register", async (req, res) => {
     res.header("Access-Control-Allow-Origin", "*"); // 모든 도메인
     let keyword = req.body.school + " " + req.body.name + " " + req.body.company + " " + req.body.sex + " " + req.body.birth;
 
-    try {
-        await axios.get(`https://open-korean-text-api.herokuapp.com/extractPhrases?text=` + encodeURI(keyword))
+    try {         
+        await axios.get(`http://27.96.135.159:8080/api/tag/` + encodeURI(keyword))
             .then(response => {
                 if (response.data) {
-                    let temp = response.data.phrases;
+                    let temp = response.data.taglist;
                     let data = [];
-                    temp.forEach(element => {
-                        let temp = element.split("\(");
-                        if (temp[0] != '대학교' && temp[0] != '고등학교' && temp[0] != '중학교' && temp[0] != '초등학교' && temp[0] != '학교') {
-                            data[data.length] = temp[0];              //object 형태로 배열에 저장
-                        }
-                    });
+                    console.log(response.data);
+                    if(temp.length<2){
+                        data= temp;
+                    }else{
+                        temp.forEach(element => {
+                            let temp = element;
+                            if (temp[0] != '대학교' && temp[0] != '고등학교' && temp[0] != '중학교' && temp[0] != '초등학교' && temp[0] != '학교') {
+                                data[data.length] = temp[0];              //object 형태로 배열에 저장
+                            }
+                        });
+                    }
                     req.body.tag = data;
                     const user = new User(req.body);
                     try {
@@ -65,7 +70,47 @@ router.post("/register", async (req, res) => {
         return false;
     }
 
+    /*  //기존 태그 분할 api    //korean - text extract Phrases
+    try {
+        await axios.get(`https://open-korean-text-api.herokuapp.com/extractPhrases?text=` + encodeURI(keyword))           //korean - text extract Phrases
+        //await axios.get(`http://27.96.135.159:8080/api/tag/` + encodeURI(keyword))
+            .then(response => {
+                if (response.data) {
+                    let temp = response.data.phrases;
+                    let data = [];
+                    console.log(response.data);
+                    if(temp.length<2){
+                        let temps = temp.split("\(");
+                        data= temps[0];
+                    }else{
+                        temp.forEach(element => {
+                            let temp = element.split("\(");
+                            if (temp[0] != '대학교' && temp[0] != '고등학교' && temp[0] != '중학교' && temp[0] != '초등학교' && temp[0] != '학교') {
+                                data[data.length] = temp[0];              //object 형태로 배열에 저장
+                            }
+                        });
+                    }
+                    req.body.tag = data;
+                    const user = new User(req.body);
+                    try {
+                        user.save()
+                        return res.status(200).json({
+                            success: true
+                        });
+                    } catch (err) {
+                        return (err)
+                    }
+                } else {
+                    console.log("error:", response.data.token_strings);
+                    return false;
+                }
+            })
+    } catch (error) {
+        console.log(error)
+        return false;
+    }
 
+*/
 
 });
 
@@ -109,19 +154,12 @@ router.get("/logout", auth, async (req, res) => {
     }
 });
 
-
 //알수도 있는 사람 기능 구현
 router.post("/getUser", (req, res) => {
     res.header("Access-Control-Allow-Origin", "*"); // 모든 도메인
-    // if(!req.body.userId.user){
-    //     res.status(400).json({ success: false })
-    // }else
-    //console.log(req.body.userId.userData);
     try {
         User.find({ _id: req.body.userId.userData._id })
             .exec((err, user) => {
-                //console.log(user[0].tag);
-                //if (err) return res.status(400).send(err);
                 let data = [];
                 let temp;
                 try {
@@ -129,16 +167,16 @@ router.post("/getUser", (req, res) => {
                 } catch{
                     return res.status(400).send("e");
                 }
-                console.log("Tag=", temp);
                 temp.forEach((el) => {
                     let tempObj = new Object;
                     tempObj.tag = el;
                     data[data.length] = tempObj;
                 })
-                
-                //res.status(200).json({ success: true, user})                //현재 자기자신 리턴
+                if(data.length<2){                      //결과가 없을 경우 리턴 에러
+                    console.log("data.length<2")
+                    return res.status(400).send("e");
+                }      
                 let str = { $or: data }                           //키워드값 or검색
-                console.log("let str=", str);
                 User.find(str)
                     .exec((err, user) => {
                         console.log(err, user);
@@ -155,32 +193,41 @@ router.post("/getUser", (req, res) => {
 
 
 
-//검색 기능 구현
+//검색 기능 구현 - 검색결과 리턴
 router.post("/searchUser", async (req, res) => {
     res.header("Access-Control-Allow-Origin", "*"); // 모든 도메인
     console.log(req.body.keyword);
     var keyword = req.body.keyword;
-    //keyword.replace(" ", "");
-
-    var resultNLP;
 
     try {
-        await axios.get(`https://open-korean-text-api.herokuapp.com/extractPhrases?text=` + encodeURI(keyword))
+        await axios.get(`http://27.96.135.159:8080/api/tag/` + encodeURI(keyword))
             .then(response => {
                 if (response.data) {
-                    let temp = response.data.phrases;
+                    let temps = response.data.taglist;
                     let data = [];
-                    temp.forEach(element => {
-                        let temp = element.split("\(");
-                        if (temp[0] != '대학교' && temp[0] != '고등학교' && temp[0] != '중학교' && temp[0] != '초등학교' && temp[0] != '학교') {
-                            let tempObj = new Object;
-                            tempObj.tag = temp[0];
-                            data[data.length] = tempObj;              //object 형태로 배열에 저장
-                        }
-                    });
-                    resultNLP = response.data.phrases;               //검색 결과 배열에 저장
-                    console.log(data);
+                    if(temps.length<2){
+                            let temp = temps;
+                            if (temp != '대학교' && temp != '고등학교' && temp != '중학교' && temp != '초등학교' && temp != '학교') {
+                                let tempObj = new Object;
+                                tempObj.tag = temp[0];
+                                data[data.length] = tempObj;               //object 형태로 배열에 저장
+                            }
+                    }else{
+                        temps.forEach(element => {
+                            let temp = element
+                            if (temp != '대학교' && temp != '고등학교' && temp != '중학교' && temp != '초등학교' && temp != '학교') {
+                                let tempObj = new Object;
+                                tempObj.tag = temp;
+                                data[data.length] = tempObj;              //object 형태로 배열에 저장
+                            }
+                        });
+                    }
+                    
                     let str = { $or: data }                           //키워드값 or검색
+                    // if(temps.length<2){
+                    //     str = data;
+                    // }
+                    console.log(data,str);
                     User.find(str)
                         .exec((err, user) => {
                             console.log(err, user);
@@ -196,6 +243,57 @@ router.post("/searchUser", async (req, res) => {
     }
 
 
+
+
+
+
+/*     기존 태그분할 api
+    try {
+        //await axios.get(`https://open-korean-text-api.herokuapp.com/extractPhrases?text=` + encodeURI(keyword))
+        await axios.get(`https://open-korean-text-api.herokuapp.com/extractPhrases?text=` + encodeURI(keyword))
+            .then(response => {
+                if (response.data) {
+                    let temps = response.data.phrases;
+                    let data = [];
+                    console.log("rese",temps);
+                    if(temps.length<2){
+                            let temp = temps[0].split("\(");
+                            if (temp[0] != '대학교' && temp[0] != '고등학교' && temp[0] != '중학교' && temp[0] != '초등학교' && temp[0] != '학교') {
+                                let tempObj = new Object;
+                                tempObj.tag = temp[0];
+                                data = tempObj;              //object 형태로 배열에 저장
+                            }
+                    }else{
+                        temps.forEach(element => {
+                            let temp = element.split("\(");
+                            if (temp[0] != '대학교' && temp[0] != '고등학교' && temp[0] != '중학교' && temp[0] != '초등학교' && temp[0] != '학교') {
+                                let tempObj = new Object;
+                                tempObj.tag = temp[0];
+                                data[data.length] = tempObj;              //object 형태로 배열에 저장
+                            }
+                        });
+                    }
+                    
+                    let str = { $or: data }                           //키워드값 or검색
+                    if(temps.length<2){
+                        str = data;
+                    }
+                    console.log(data,str);
+                    User.find(str)
+                        .exec((err, user) => {
+                            console.log(err, user);
+                            if (err) return res.status(400).send(err);
+                            res.status(200).json({ success: true, user })
+                        })
+                } else {
+                    console.log("error:", response.data.parases);
+                }
+            })
+    } catch (error) {
+        console.log(error)
+    }
+
+*/
 
 
 

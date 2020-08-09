@@ -12,7 +12,7 @@ const { Meta } = Card;
 
 function SearchPage(props) {
   
-  
+
   //검색창 입력용
   const [key, setKey] = useState('');
   const onChangeKey = e => {
@@ -22,6 +22,13 @@ function SearchPage(props) {
   useEffect(() => {
   }, [key]);
 
+  //input focus 일때 enter키 입력시 
+  const handleKeyPress = (event) => {
+    if(event.key == 'Enter'){
+       alert("검색 버튼을 클릭해 주세요")
+      console.log('enter press here! ')
+    }
+  }
 
   const searchVariable = {
     keyword: props.location.state.key
@@ -36,7 +43,6 @@ function SearchPage(props) {
   useEffect(() => {
     axios.post('/api/users/searchUser', searchVariable)
       .then(response => {
-        //console.log(response)
         if (response.data.success) {
           setUsers(response.data.user)
         } else {
@@ -47,10 +53,9 @@ function SearchPage(props) {
   }, [find]);
 
 
-
   //검색 결과 유저목록 받아오기
   useEffect(() => {
-    axios.post(/*localhost123*/'/api/users/searchUser', searchVariable)
+    axios.post('/api/users/searchUser', searchVariable)
       .then(response => {
         //console.log(response)
         if (response.data.success) {
@@ -63,9 +68,7 @@ function SearchPage(props) {
 
 
   const renderCards = Users.map((users, index) => {
-
-    return <Col lg={24} md={24} xs={24} style={{ marginBottom: '10px', marginLeft: '20px' }}>
-      <div class="people_item">
+      return <div class="people_item">
         <button class="plus_button">♡</button>
         <div class="people_item_top">
           <img class="people_img" src={`${users.image}`} alt="profile_img"></img>
@@ -83,16 +86,16 @@ function SearchPage(props) {
           </div>
         </div>
       </div>
-    </Col>
-
   })
 
   return (
     <div class="root">
       <div class="top">
         <h1 class="search_title">우리들의 고여버린 기억</h1>
-        <form class="search_box" method="post">
-          <input required class="search_input" onChange={onChangeKey} type="text" defaultValue={`${props.location.state.key}`} />
+        <form class="search_box">
+          <input class="main_input" type="text" placeholder="키워드" defaultValue={`${props.location.state.key}`} 
+               onChange={onChangeKey} onKeyPress={handleKeyPress} onSubmit={e => { e.preventDefault(); }}
+            />
           <div class="icon_box">
             <button class="mike_button"><span class="material-icons">👄</span></button>
             <Link to={{
@@ -105,17 +108,16 @@ function SearchPage(props) {
             </Link>
           </div>
         </form>
-        <div class="tag_box">
+        {/* <div class="tag_box">
           <span class="tag_item">군자초</span>
           <span class="tag_item">18기</span>
           <span class="tag_item">보이스카우트</span>
-        </div>
+        </div> */}
       </div>
       <div class="people_main_box">
         <p class="people_main_title">혹시, 너도 고였니?😉</p>
         <div class="people_box">
-
-          <Row gutter={16}>{renderCards}</Row>
+          {renderCards}
         </div>
       </div>
     </div>
