@@ -10,7 +10,9 @@ import { BACK_SERVER_URL, headersConfig } from '../components/Config.js';
 
 export function registerUser(dataToSubmit) {
     const request = axios.post(`/api/users/register`, dataToSubmit)
-        .then(response => response.data);
+        .then(response =>response.data)
+    // console.log(request);
+    // alert(JSON.stringify(request));
 
     return {
         type: REGISTER_USER,

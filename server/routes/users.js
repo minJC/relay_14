@@ -37,12 +37,27 @@ router.post("/register", async(req, res) => {
     const data = [req.body.school, req.body.name, req.body.company, req.body.sex, req.body.birth]
     req.body.tag = data;
     // url형태로 온 req.body.image 를 api로 유해성 선정성 검사 추가
-    let detections = search
+    // let detections = search
+    const name = req.body.name; // -> 회원 이름
+    const profile_url = req.body.image; // -> 회원 가입 시 작성한 프로필 이미지 url
+    // console.log('=======================================');
+    // console.log(profile_url);
+    // console.log('=======================================');
+    
     const user = new User(req.body);
     try {
+        //func1(profile_url)
+        if(!profile_url){ // 유해한 이미지 O
+            return res.status(200).json({
+                success: false,
+                inapprop: true
+            });
+        }
+
         user.save()
         return res.status(200).json({
-            success: true
+            success: true,
+            inapprop: false
         });
     } catch (err) {
         return (err)

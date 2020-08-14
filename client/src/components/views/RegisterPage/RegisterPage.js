@@ -108,10 +108,16 @@ function RegisterPage(props) {
 
           dispatch(registerUser(dataToSubmit)).then(response => {
             if (response.payload.success) {
+              // alert(JSON.stringify(response));
+              // console.dir(response, {depth:null});
               props.history.push("/login");
               //props.history.push("/youknow");
             } else {
-              alert(response.payload.err.errmsg);
+              if(response.payload.inapprop){
+                alert("부적절한 이미지로 파악이 되었습니다. 다시 회원가입해주세요");
+              } else{
+                alert(response.payload.err.errmsg);
+              }
             }
           })
           setSubmitting(false);
