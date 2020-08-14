@@ -71,7 +71,7 @@ router.post("/register", async(req, res) => {
     const user = new User(req.body);
     try {
         //func1(profile_url)
-        if ((soft + adult) > 0.5) { // 유해한 이미지 O
+        if (normal < 0.5) { // 유해한 이미지 O
             // if (!profile_url) { // 유해한 이미지 O
             console.log("유해한 이미지입니다.")
             return res.status(200).json({
