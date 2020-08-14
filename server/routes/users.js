@@ -6,6 +6,24 @@ const { auth } = require("../middleware/auth");
 const axios = require("axios");
 const key = require('../config/key');
 
+// -------- kakao vision -----------
+const API_URL = 'https://kapi.kakao.com/v1/vision/adult/detect'
+const MYAPP_KEY = '5b1c7e32fa039f47b40edc41e6dda126'
+
+async function searchRemote(src) {
+    return await axios.request({
+            method: 'POST',
+            url: `${API_URL}`,
+            headers: { Authorization: `KakaoAK ${MYAPP_KEY}` },
+            params: { image_url: src },
+        }).then(function(response) {
+            console.log(response);
+        })
+        .catch(function(error) {
+            console.error(error);
+        });
+}
+// ----------------------------------
 //=================================
 //             User
 //=================================
@@ -37,7 +55,9 @@ router.post("/register", async(req, res) => {
     const data = [req.body.school, req.body.name, req.body.company, req.body.sex, req.body.birth]
     req.body.tag = data;
     // url형태로 온 req.body.image 를 api로 유해성 선정성 검사 추가
-    let detections = search
+    // let detections = searchRemote(req.body.image)
+    let detections = searchRemote("https://lh3.googleusercontent.com/proxy/jfEPjvuUWC3caMweYmPJlnuTINkluwZlMVnMYpjpnqGxg7CPCEhBqXw_mZKNYtBRtPNwr3rDK5S0ZzEiF0eR2kVD6873k5Nsm-sTnF62VNYgxWxymlC-nB9MgdR59Hn1vKg")
+    console.log(detections);
     const user = new User(req.body);
     try {
         user.save()
