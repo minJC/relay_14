@@ -11,18 +11,12 @@ const API_URL = 'https://kapi.kakao.com/v1/vision/adult/detect'
 const MYAPP_KEY = '5b1c7e32fa039f47b40edc41e6dda126'
 
 function searchRemote(src) {
-    const request = axios.request({
+    return request = axios.request({
         method: 'POST',
         url: `${API_URL}`,
         headers: { Authorization: `KakaoAK ${MYAPP_KEY}` },
         params: { image_url: src },
-    }).then(function(response) {
-        return response.data;
-    });
-    return {
-        type: 'adult',
-        payload: request
-    }
+    })
 }
 // ----------------------------------
 //=================================
@@ -59,33 +53,34 @@ router.post("/register", async(req, res) => {
     // let detections = searchRemote(req.body.image)
     const name = req.body.name; // -> 회원 이름
     const profile_url = req.body.image; // -> 회원 가입 시 작성한 프로필 이미지 url
+    // const profile_url = "https://img6.yna.co.kr/etc/inner/KR/2020/05/20/AKR20200520164400111_01_i_P2.jpg";
 
-    let detections = searchRemote("https://img6.yna.co.kr/etc/inner/KR/2020/05/20/AKR20200520164400111_01_i_P2.jpg")
-        // let detections = searchRemote(profile_url)
+    let detections = await axios.request({ method: 'POST', url: `${API_URL}`, headers: { Authorization: `KakaoAK ${MYAPP_KEY}` }, params: { image_url: profile_url }, })
+
+    let result = detections.data.result;
+    let normal = result.normal
+    let soft = result.soft
+    let adult = result.adult
+
     console.log("===========================================================================================================================");
-    console.dir(detections);
+    console.dir(`normal: ${normal}`);
+    console.dir(`soft: ${soft}`);
+    console.dir(`adult: ${adult}`);
     console.log("===========================================================================================================================");
-
-    // let result = detections.result;
-    // let normal = result.normal
-    // let soft = result.soft
-    // let adult = result.adult
-
-    // console.log('=======================================');
-    // console.log(profile_url);
-    // console.log('=======================================');
 
     const user = new User(req.body);
     try {
         //func1(profile_url)
-        // if ((soft + adult) > 0.5) { // 유해한 이미지 O
-        if (!profile_url) { // 유해한 이미지 O
+        if ((soft + adult) > 0.5) { // 유해한 이미지 O
+            // if (!profile_url) { // 유해한 이미지 O
+            console.log("유해한 이미지입니다.")
             return res.status(200).json({
                 success: false,
                 inapprop: true
             });
         }
 
+        console.log("유해하지 않은 이미지입니다.")
         user.save()
         return res.status(200).json({
             success: true,
