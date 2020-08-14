@@ -3,9 +3,7 @@ const router = express.Router();
 const { User } = require("../models/User");
 const axios = require("axios");
 
-router.post("/findsimilar", async (req, res) => {
-  console.log("hi");
-
+router.post("/", async (req, res) => {
   res.header("Access-Control-Allow-Origin", "*"); // 모든 도메인
   User.findOne({ name: req.body.name }, async (err, user) => {
     if (!user)
