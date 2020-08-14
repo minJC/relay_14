@@ -11,18 +11,15 @@ const API_URL = 'https://kapi.kakao.com/v1/vision/adult/detect'
 const MYAPP_KEY = '5b1c7e32fa039f47b40edc41e6dda126'
 
 function searchRemote(src) {
-    const request = axios.request({
+    return axios.request({
         method: 'POST',
         url: `${API_URL}`,
         headers: { Authorization: `KakaoAK ${MYAPP_KEY}` },
         params: { image_url: src },
-    }).then(function(response) {
+    }).then(function(response){
+        console.log(response);
         return response.data;
     });
-    return {
-        type: 'adult',
-        payload: request
-    }
 }
 // ----------------------------------
 //=================================
@@ -60,7 +57,7 @@ router.post("/register", async(req, res) => {
     const name = req.body.name; // -> 회원 이름
     const profile_url = req.body.image; // -> 회원 가입 시 작성한 프로필 이미지 url
 
-    let detections = searchRemote("https://img6.yna.co.kr/etc/inner/KR/2020/05/20/AKR20200520164400111_01_i_P2.jpg")
+    let detections = await searchRemote("https://img6.yna.co.kr/etc/inner/KR/2020/05/20/AKR20200520164400111_01_i_P2.jpg")
         // let detections = searchRemote(profile_url)
     console.log("===========================================================================================================================");
     console.dir(detections);
