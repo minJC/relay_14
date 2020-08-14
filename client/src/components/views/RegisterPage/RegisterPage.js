@@ -56,7 +56,8 @@ function RegisterPage(props) {
         sex1:'',
         sex2:'',
         intro:'',
-        tag:''
+        tag:'',
+        profile_url:'',//
       }}
       validationSchema={Yup.object().shape({
         name: Yup.string()
@@ -72,6 +73,8 @@ function RegisterPage(props) {
           .required('Confirm Password is required'),
         intro: Yup.string()
         .required('자기소개를 입력해주세요'),
+        profile_url: Yup.string()//
+        .required('프로필 사진 url을 입력해주세요'),
       })}
       onSubmit={(values, { setSubmitting }) => {
         setTimeout(() => {
@@ -96,10 +99,11 @@ function RegisterPage(props) {
             school : values.school,
             birth : values.birth,
             sex : (values.sex1)?"여자":"남자",
-            image: `http://gravatar.com/avatar/${moment().unix()}?d=identicon`,
+            image: values.profile_url,
             phone: values.phone,
             intro: addEnter(values.intro),
-            tag: ''
+            tag: '',
+            // profile_url:values.profile_url,//
           };
 
           dispatch(registerUser(dataToSubmit)).then(response => {
@@ -258,6 +262,17 @@ function RegisterPage(props) {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   style={{width:'100%', height:'100px'}}
+                />
+              </Form.Item>
+
+              <Form.Item required label="프로필사진">
+                <Input
+                  id="profile_url"
+                  placeholder="profile url"
+                  type="text"
+                  value={values.profile_url}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
                 />
               </Form.Item>
 
