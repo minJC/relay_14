@@ -49,10 +49,6 @@ if (process.env.NODE_ENV === 'production') {
   // All the javascript and css files will be read and served from this folder
   app.use(express.static('client/build'));
 
-  app.post('/', (req, res) => {
-    res.send(`${req.body.a} ${req.body.b}`);
-  });
-
   app.get('/', (req, res) => {
     res.send(`안녕하세요 relay14 api 서버입니다.`);
   });
