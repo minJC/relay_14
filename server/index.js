@@ -53,6 +53,10 @@ if (process.env.NODE_ENV === 'production') {
     res.send(`${req.body.a} ${req.body.b}`);
   });
 
+  app.get('/', (req, res) => {
+    res.send(`안녕하세요 relay14 api 서버입니다.`);
+  });
+
   // index.html for all page routes  html or routing and naviagtion
   app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, '../client', 'build', 'index.html'));
