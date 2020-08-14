@@ -30,6 +30,7 @@
     "socket.io-client": "^2.3.0",
     "styled-components": "^5.1.1",
     "use-react-router": "^1.0.7",
+    "http-proxy-middleware": "^1.0.4",
     "yup": "^0.29.1"
   },
   "scripts": {
@@ -53,7 +54,5 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {
-    "http-proxy-middleware": "^1.0.4"
-  }
+  "devDependencies": {}
 }
