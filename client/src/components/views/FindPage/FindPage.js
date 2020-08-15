@@ -6,6 +6,7 @@ import { Formik } from 'formik';
 import { Card, Form, Input, Button, Row, Typography } from 'antd';
 import * as Yup from 'yup';
 import { useDispatch } from "react-redux";
+import { findUserByPhoto } from '../../../_actions/user_actions';
 const { Title } = Typography;
 const { Meta } = Card;
 
@@ -76,10 +77,9 @@ function FindPage(props) {
                         image: values.profile_url,
                     };
 
-                    dispatch(registerUser(dataToSubmit)).then(response => {
+                    dispatch(findUserByPhoto(dataToSubmit)).then(response => {
                         if (response.payload.success) {
                           props.history.push("/findResult");
-                          //props.history.push("/youknow");
                         } else {
                           alert(response.payload.err.errmsg);
                         }

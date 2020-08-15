@@ -4,6 +4,7 @@ import {
     REGISTER_USER,
     AUTH_USER,
     LOGOUT_USER,
+    FIND_USER_BY_PHOTO,
 } from './types';
 import { BACK_SERVER_URL, headersConfig } from '../components/Config.js';
 
@@ -48,3 +49,12 @@ export function logoutUser() {
     }
 }
 
+export function findUserByPhoto(dataToSubmit) {
+    const request = axios.get('/api/users/getUser', headersConfig)
+        .then(response => response.data)
+
+    return {
+        type: FIND_USER_BY_PHOTO,
+        payload: request
+    }
+}
