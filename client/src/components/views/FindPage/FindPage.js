@@ -24,6 +24,9 @@ function FindPage(props) {
     //     <hr />
     // </div>
     // )
+
+    const user = useSelector(state => state.user)
+
     const formItemLayout = {
         labelCol: {
             xs: { span: 24 },
@@ -77,7 +80,7 @@ function FindPage(props) {
                         image: values.profile_url,
                     };
 
-                    dispatch(findUserByPhoto(dataToSubmit)).then(response => {
+                    dispatch(findUserByPhoto(/*dataToSubmit*/ {userId: user})).then(response => {
                         if (response.payload.success) {
                           props.history.push("/findResult");
                         } else {
