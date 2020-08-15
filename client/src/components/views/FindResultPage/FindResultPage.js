@@ -83,7 +83,7 @@ function FindResultPage(props) {
               style={{
                 paddingLeft: "60px",
                 position: "relative",
-                bottom: "8px",
+                bottom: "0px",
               }}
             >
               <h3>{`${users.name}`}</h3>

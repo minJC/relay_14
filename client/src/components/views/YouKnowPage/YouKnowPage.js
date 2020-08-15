@@ -33,7 +33,7 @@ function YouKnowPage(props) {
     let friendsArray = [""];
 
     const addFriend = (userData) => {
-        console.log(userData._id)
+        console.log(userData)
         
     }
 
@@ -61,7 +61,7 @@ function YouKnowPage(props) {
                     <div style={{ position: 'relative', margin: '0px 10px', width: '150px', height: '150px', overflow: 'hidden', border: '1px solid rgba(0,0,0,.2)', borderRadius: '10px 10px' }}>
                         <img style={{ width: '100%', height : '100%', display: `inline` }} alt="thumbnail" src={`${users.image}`} />
                     </div>
-                    <div style={{paddingLeft : '60px', position : 'relative', bottom : '8px'}}><h3>{`${users.name}`}</h3></div>
+                    <div style={{paddingLeft : '60px', position : 'relative', bottom : '0px'}}><h3>{`${users.name}`}</h3></div>
                 </div>
             </Col>
 
