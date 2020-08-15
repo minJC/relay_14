@@ -50,7 +50,11 @@ export function logoutUser() {
 }
 
 export function findUserByPhoto(dataToSubmit) {
+<<<<<<< HEAD
+    const request = axios.post('/api/users/getUser', dataToSubmit)
+=======
     const request = axios.post('/api/users/getFindUser', dataToSubmit)
+>>>>>>> 3e6b5274731358ce43b08791cf20322b7e3bb00c
         .then(response => response.data)
 
     return {
