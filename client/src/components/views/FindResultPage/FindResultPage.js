@@ -13,7 +13,7 @@ function FindResultPage(props) {
   let user = useSelector((state) => state.user.findData);
 
   if (user !== undefined) {
-    user = user.user;
+    user = (user.user) ? user.user : [];
   }
   else {
     props.history.push("/");
@@ -22,10 +22,6 @@ function FindResultPage(props) {
 
   console.log("=== === === ");
   console.log(user);
-
-  if (user === undefined) {
-    user = [];
-  }
 
   const UserVariable = {
     userId: user,
