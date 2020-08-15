@@ -6,11 +6,7 @@ const axios = require("axios");
 router.post("/", async (req, res) => {
   res.header("Access-Control-Allow-Origin", "*"); // 모든 도메인
   User.findOne({ name: req.body.name }, async (err, user) => {
-    if (!user)
-      return res.json({
-        isTherUser: false,
-        message: "No such user",
-      });
+    if (!user) return res.status(200).json({ success: true, user: [] });
 
     const targetUserImage = user.image;
     const searchingUserImage = req.body.image;
