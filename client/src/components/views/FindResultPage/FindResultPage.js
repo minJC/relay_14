@@ -18,7 +18,7 @@ function FindResultPage(props) {
 
     useEffect(() => {
         if (user)
-            axios.post(/*localhost123*/'/api/users/getUser', UserVariable)
+            axios.post(/*localhost123*/'/api/users/getFindUser', UserVariable)
                 .then(response => {
                     if (response.data.success) {
                         setUsers(response.data.user)
