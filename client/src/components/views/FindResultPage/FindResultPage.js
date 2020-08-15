@@ -8,9 +8,17 @@ const { Meta } = Card;
 
 function FindResultPage(props) {
   const [Users, setUsers] = useState([]);
-  var image =
+  let image =
     "https://static.wadiz.kr/main/media/img-fundingopen-pc@2x.3311937d.jpg";
-  let user = useSelector((state) => state.user.findData).user;
+  let user = useSelector((state) => state.user.findData);
+
+  if (user !== undefined) {
+    user = user.user;
+  }
+  else {
+    props.history.push("/");
+    return (<div></div>);
+  }
 
   console.log("=== === === ");
   console.log(user);
