@@ -20,9 +20,9 @@ router.post("/", async (req, res) => {
     );
 
     if (verifyResult > 0.5) {
-      return res.json({ isThereResult: true, user: user });
+      res.status(200).json({ success: true, user });
     }
-    return res.json({ isThereResult: false });
+    return res.status(400).send(err);
   });
 });
 
