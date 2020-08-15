@@ -6,9 +6,11 @@ const { auth } = require("../middleware/auth");
 const axios = require("axios");
 const key = require('../config/key');
 
+const flask_nlp_server = 'https://relay14-nlp-server.herokuapp.com';
+
 // -------- kakao vision -----------
 const API_URL = 'https://kapi.kakao.com/v1/vision/adult/detect'
-const MYAPP_KEY = '5b1c7e32fa039f47b40edc41e6dda126'
+const MYAPP_KEY = '5b1c7e32fa039f47b40edc41e6dda126' // 카카오 api key
 
 function searchRemote(src) {
     return request = axios.request({
@@ -44,17 +46,15 @@ router.get("/auth", auth, async(req, res) => {
 });
 
 
-//회원가입'
+// 회원가입, 파이썬 자연어 처리를 포함하지 않은 라우터
 router.post("/register", async(req, res) => {
     res.header("Access-Control-Allow-Origin", "*"); // 모든 도메인
     const data = [req.body.school, req.body.name, req.body.company, req.body.sex, req.body.birth]
     req.body.tag = data;
     // url형태로 온 req.body.image 를 api로 유해성 선정성 검사 추가
-    // let detections = searchRemote(req.body.image)
     const name = req.body.name; // -> 회원 이름
     const profile_url = req.body.image; // -> 회원 가입 시 작성한 프로필 이미지 url
-    // const profile_url = "https://img6.yna.co.kr/etc/inner/KR/2020/05/20/AKR20200520164400111_01_i_P2.jpg";
-
+    
     let detections = await axios.request({ method: 'POST', url: `${API_URL}`, headers: { Authorization: `KakaoAK ${MYAPP_KEY}` }, params: { image_url: profile_url }, })
 
     let result = detections.data.result;
@@ -70,9 +70,7 @@ router.post("/register", async(req, res) => {
 
     const user = new User(req.body);
     try {
-        //func1(profile_url)
         if (normal < 0.5) { // 유해한 이미지 O
-            // if (!profile_url) { // 유해한 이미지 O
             console.log("유해한 이미지입니다.")
             return res.status(200).json({
                 success: false,
@@ -90,12 +88,35 @@ router.post("/register", async(req, res) => {
         return (err)
     }
 });
+
+// 회원가입, 파이썬 자연어 처리를 포함한 라우터
 // router.post("/register", async(req, res) => {
 //     res.header("Access-Control-Allow-Origin", "*"); // 모든 도메인
 //     let keyword = req.body.school + " " + req.body.name + " " + req.body.company + " " + req.body.sex + " " + req.body.birth;
 
+//     // url형태로 온 req.body.image 를 api로 유해성 선정성 검사 추가
+//     const name = req.body.name; // -> 회원 이름
+//     const profile_url = req.body.image; // -> 회원 가입 시 작성한 프로필 이미지 url
+    
+//     let detections = await axios.request({ method: 'POST', url: `${API_URL}`, headers: { Authorization: `KakaoAK ${MYAPP_KEY}` }, params: { image_url: profile_url }, })
+
+//     let result = detections.data.result;
+//     let normal = result.normal
+//     // let soft = result.soft
+//     // let adult = result.adult
+
+
 //     try {
-//         await axios.get(`http://127.0.0.1:8080/api/tag/` + encodeURI(keyword))
+//         if (normal < 0.5) { // 유해한 이미지 O
+//             console.log("유해한 이미지입니다.")
+//             return res.status(200).json({
+//                 success: false,
+//                 inapprop: true
+//             });
+//         }
+//         console.log("유해하지 않은 이미지입니다.")
+
+//         await axios.get(flask_nlp_server +`/api/tag/` + encodeURI(keyword))
 //             .then(response => {
 //                 if (response.data) {
 //                     let temp = response.data.taglist;
@@ -114,9 +135,11 @@ router.post("/register", async(req, res) => {
 //                     req.body.tag = data;
 //                     const user = new User(req.body);
 //                     try {
+                       
 //                         user.save()
 //                         return res.status(200).json({
-//                             success: true
+//                             success: true,
+//                             inapprop: false
 //                         });
 //                     } catch (err) {
 //                         return (err)
@@ -212,15 +235,13 @@ router.post("/getUser", (req, res) => {
 });
 
 
-
-
 //검색 기능 구현 - 검색결과 리턴
 router.post("/searchUser", async(req, res) => {
     res.header("Access-Control-Allow-Origin", "*"); // 모든 도메인
     console.log(req.body.keyword);
     var keyword = req.body.keyword;
     try {
-        await axios.get(`http://127.0.0.1:8080/api/tag/` + encodeURI(keyword))
+        await axios.get(flask_nlp_server+`/api/tag/` + encodeURI(keyword))
             .then(response => {
                 if (response.data) {
                     let temps = response.data.taglist;
