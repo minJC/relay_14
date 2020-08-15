@@ -152,6 +152,41 @@ router.post("/getUser", (req, res) => {
 
 });
 
+router.post("/getFindUser", (req, res) => {
+    res.header("Access-Control-Allow-Origin", "*"); // 모든 도메인
+    try {
+        User.find({ _id: req.body.userId.userData._id })
+            .exec((err, user) => {
+                let data = [];
+                let temp;
+                try {
+                    temp = user[0].tag
+                } catch{
+                    return res.status(400).send("e");
+                }
+                temp.forEach((el) => {
+                    let tempObj = new Object;
+                    tempObj.tag = el;
+                    data[data.length] = tempObj;
+                })
+                if(data.length<2){                      //결과가 없을 경우 리턴 에러
+                    console.log("data.length<2")
+                    return res.status(400).send("e");
+                }      
+                let str = { $or: data }                           //키워드값 or검색
+                User.find(str)
+                    .exec((err, user) => {
+                        console.log(err, user);
+                        if (err) return res.status(400).send(err);
+                        res.status(200).json({ success: true, user })
+                    })
+            })
+    } catch (e) {
+        return res.status(400).send("e");
+    }
+
+});
+
 
 
 
