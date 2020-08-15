@@ -20,15 +20,16 @@ router.post("/", async (req, res) => {
     );
 
     if (verifyResult > 0.5) {
-      res.status(200).json({ success: true, user });
+      res.status(200).json({ success: true, user: [user] });
     }
-    return res.status(400).send(err);
+    return res.status(200).json({ success: true, user: [] });
   });
 });
 
 async function compareTwoUsers(url1, url2) {
   let result1 = undefined;
   let result2 = undefined;
+  let verifyResult = undefined;
   let subscriptionKey = "d0eb598e24a14411b5d155a32db16687";
   let endpoint =
     "https://koreacentral.api.cognitive.microsoft.com/face/v1.0/detect";
@@ -104,11 +105,12 @@ async function compareTwoUsers(url1, url2) {
       // console.log("Status text: " + response.statusText);
       // console.log();
       // console.log(response.data.confidence);
-      return response.data.confidence;
+      verifyResult = response.data.confidence;
     })
     .catch(function (error) {
       console.log(error);
     });
+  return verifyResult;
 }
 
 module.exports = router;
