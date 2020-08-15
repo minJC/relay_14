@@ -1,17 +1,17 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { User } = require('../models/User');
-const { Follow } = require('../models/Follow');
-const { auth } = require('../middleware/auth');
-const axios = require('axios');
-const key = require('../config/key');
+const { User } = require("../models/User");
+const { Follow } = require("../models/Follow");
+const { auth } = require("../middleware/auth");
+const axios = require("axios");
+const key = require("../config/key");
 //=================================
 //             User
 //=================================
 
 //인증
-router.get('/auth', auth, async (req, res) => {
-  res.header('Access-Control-Allow-Origin', '*'); // 모든 도메인
+router.get("/auth", auth, async (req, res) => {
+  res.header("Access-Control-Allow-Origin", "*"); // 모든 도메인
   res.status(200).json({
     _id: req.user._id,
     isAdmin: req.user.role === 0 ? false : true,
@@ -30,22 +30,24 @@ router.get('/auth', auth, async (req, res) => {
 });
 
 //회원가입
-router.post('/register', async (req, res) => {
-  res.header('Access-Control-Allow-Origin', '*'); // 모든 도메인
+router.post("/register", async (req, res) => {
+  res.header("Access-Control-Allow-Origin", "*"); // 모든 도메인
   let keyword =
     req.body.school +
-    ' ' +
+    " " +
     req.body.name +
-    ' ' +
+    " " +
     req.body.company +
-    ' ' +
+    " " +
     req.body.sex +
-    ' ' +
+    " " +
     req.body.birth;
 
   try {
     await axios
-      .get(`https://relay14-nlp-server.herokuapp.com/api/tag/` + encodeURI(keyword))
+      .get(
+        `https://relay14-nlp-server.herokuapp.com/api/tag/` + encodeURI(keyword)
+      )
       .then((response) => {
         if (response.data) {
           let temp = response.data.taglist;
@@ -57,11 +59,11 @@ router.post('/register', async (req, res) => {
             temp.forEach((element) => {
               let temp = element;
               if (
-                temp[0] != '대학교' &&
-                temp[0] != '고등학교' &&
-                temp[0] != '중학교' &&
-                temp[0] != '초등학교' &&
-                temp[0] != '학교'
+                temp[0] != "대학교" &&
+                temp[0] != "고등학교" &&
+                temp[0] != "중학교" &&
+                temp[0] != "초등학교" &&
+                temp[0] != "학교"
               ) {
                 data[data.length] = temp[0]; //object 형태로 배열에 저장
               }
@@ -78,7 +80,7 @@ router.post('/register', async (req, res) => {
             return err;
           }
         } else {
-          console.log('error:', response.data.token_strings);
+          console.log("error:", response.data.token_strings);
           return false;
         }
       });
@@ -89,17 +91,18 @@ router.post('/register', async (req, res) => {
 });
 
 //로그인
-router.post('/login', (req, res) => {
-  res.header('Access-Control-Allow-Origin', '*'); // 모든 도메인
+router.post("/login", (req, res) => {
+  res.header("Access-Control-Allow-Origin", "*"); // 모든 도메인
   User.findOne({ email: req.body.email }, (err, user) => {
     if (!user)
       return res.json({
         loginSuccess: false,
-        message: 'Auth failed, account not found',
+        message: "Auth failed, account not found",
       });
 
     user.comparePassword(req.body.password, (err, isMatch) => {
-      if (!isMatch) return res.json({ loginSuccess: false, message: 'Wrong password' });
+      if (!isMatch)
+        return res.json({ loginSuccess: false, message: "Wrong password" });
 
       user.generateToken((err, user) => {
         if (err) return res.status(400).send(err);
@@ -115,10 +118,13 @@ router.post('/login', (req, res) => {
 });
 
 //로그아웃
-router.get('/logout', auth, async (req, res) => {
-  res.header('Access-Control-Allow-Origin', '*'); // 모든 도메인
+router.get("/logout", auth, async (req, res) => {
+  res.header("Access-Control-Allow-Origin", "*"); // 모든 도메인
   try {
-    await User.findOneAndUpdate({ _id: req.user._id }, { token: '', tokenExp: '' });
+    await User.findOneAndUpdate(
+      { _id: req.user._id },
+      { token: "", tokenExp: "" }
+    );
     return res.status(200).send({
       success: true,
     });
@@ -128,8 +134,8 @@ router.get('/logout', auth, async (req, res) => {
 });
 
 //알수도 있는 사람 기능 구현
-router.post('/getUser', (req, res) => {
-  res.header('Access-Control-Allow-Origin', '*'); // 모든 도메인
+router.post("/getUser", (req, res) => {
+  res.header("Access-Control-Allow-Origin", "*"); // 모든 도메인
   try {
     User.find({ _id: req.body.userId.userData._id }).exec((err, user) => {
       let data = [];
@@ -137,7 +143,7 @@ router.post('/getUser', (req, res) => {
       try {
         temp = user[0].tag;
       } catch {
-        return res.status(400).send('e');
+        return res.status(400).send("e");
       }
       temp.forEach((el) => {
         let tempObj = new Object();
@@ -146,8 +152,8 @@ router.post('/getUser', (req, res) => {
       });
       if (data.length < 2) {
         //결과가 없을 경우 리턴 에러
-        console.log('data.length<2');
-        return res.status(400).send('e');
+        console.log("data.length<2");
+        return res.status(400).send("e");
       }
       let str = { $or: data }; //키워드값 or검색
       User.find(str).exec((err, user) => {
@@ -157,18 +163,53 @@ router.post('/getUser', (req, res) => {
       });
     });
   } catch (e) {
-    return res.status(400).send('e');
+    return res.status(400).send("e");
+  }
+});
+
+router.post("/getFindUser", (req, res) => {
+  res.header("Access-Control-Allow-Origin", "*"); // 모든 도메인
+  try {
+    User.find({ _id: req.body.userId.userData._id }).exec((err, user) => {
+      let data = [];
+      let temp;
+      try {
+        temp = user[0].tag;
+      } catch {
+        return res.status(400).send("e");
+      }
+      temp.forEach((el) => {
+        let tempObj = new Object();
+        tempObj.tag = el;
+        data[data.length] = tempObj;
+      });
+      if (data.length < 2) {
+        //결과가 없을 경우 리턴 에러
+        console.log("data.length<2");
+        return res.status(400).send("e");
+      }
+      let str = { $or: data }; //키워드값 or검색
+      User.find(str).exec((err, user) => {
+        console.log(err, user);
+        if (err) return res.status(400).send(err);
+        res.status(200).json({ success: true, user });
+      });
+    });
+  } catch (e) {
+    return res.status(400).send("e");
   }
 });
 
 //검색 기능 구현 - 검색결과 리턴
-router.post('/searchUser', async (req, res) => {
-  res.header('Access-Control-Allow-Origin', '*'); // 모든 도메인
+router.post("/searchUser", async (req, res) => {
+  res.header("Access-Control-Allow-Origin", "*"); // 모든 도메인
   console.log(req.body.keyword);
   var keyword = req.body.keyword;
   try {
     await axios
-      .get(`https://relay14-nlp-server.herokuapp.com/api/tag/` + encodeURI(keyword))
+      .get(
+        `https://relay14-nlp-server.herokuapp.com/api/tag/` + encodeURI(keyword)
+      )
       .then((response) => {
         if (response.data) {
           let temps = response.data.taglist;
@@ -182,11 +223,11 @@ router.post('/searchUser', async (req, res) => {
             temps.forEach((element) => {
               let temp = element;
               if (
-                temp != '대학교' &&
-                temp != '고등학교' &&
-                temp != '중학교' &&
-                temp != '초등학교' &&
-                temp != '학교'
+                temp != "대학교" &&
+                temp != "고등학교" &&
+                temp != "중학교" &&
+                temp != "초등학교" &&
+                temp != "학교"
               ) {
                 let tempObj = new Object();
                 tempObj.tag = temp;
@@ -206,7 +247,7 @@ router.post('/searchUser', async (req, res) => {
             res.status(200).json({ success: true, user });
           });
         } else {
-          console.log('error:', response.data.parases);
+          console.log("error:", response.data.parases);
         }
       });
   } catch (error) {
