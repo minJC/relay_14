@@ -10,25 +10,19 @@ function FindResultPage(props) {
 
     const [Users, setUsers] = useState([])
     var image = 'https://static.wadiz.kr/main/media/img-fundingopen-pc@2x.3311937d.jpg';
-    const user = useSelector(state => state.user)
+    let user = useSelector(state => state.user.findData).user;
+
+    console.log("=== === === ");
+    console.log(user);
+
+    if (user === undefined) {
+        user = [];
+    }
+
     const UserVariable = {
         userId: user
     }
     console.log("console.log(user);", props);
-
-    useEffect(() => {
-        if (user)
-            axios.post(/*localhost123*/'/api/users/getUser', UserVariable)
-                .then(response => {
-                    if (response.data.success) {
-                        setUsers(response.data.user)
-                    } else {
-                        console.log("fail");
-                        //setUsers("error");
-                        alert('Failed to get User Data')
-                    }
-                })
-    }, [])
 
     let friendsArray = [""];
 
@@ -54,8 +48,8 @@ function FindResultPage(props) {
         }
     }
 
-    if (Users.length != 0) {            //서버에서 유저 데이터를 전달 받았을 경우
-        const renderCards = Users.map((users, index) => {
+    if (user.length != 0) {            //서버에서 유저 데이터를 전달 받았을 경우
+        const renderCards = user.map((users, index) => {
             return <Col lg={6} md={8} xs={24} >
                 <div style={cardStyle()} onClick={() => { addFriend(users) }}>
                     <div style={{ position: 'relative', margin: '0px 10px', width: '150px', height: '150px', overflow: 'hidden', border: '1px solid rgba(0,0,0,.2)', borderRadius: '10px 10px' }}>
