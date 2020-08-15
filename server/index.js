@@ -1,12 +1,12 @@
-const express = require('express');
-const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
-const morgan = require('morgan');
-const path = require('path');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const helmet = require('helmet');
-const config = require('./config/key');
+const express = require("express");
+const cookieParser = require("cookie-parser");
+const bodyParser = require("body-parser");
+const morgan = require("morgan");
+const path = require("path");
+const mongoose = require("mongoose");
+const cors = require("cors");
+const helmet = require("helmet");
+const config = require("./config/key");
 
 const app = express();
 
@@ -17,7 +17,7 @@ mongoose
     useFindAndModify: false,
     useCreateIndex: true,
   })
-  .then(() => console.log('MongoDB Connected...'))
+  .then(() => console.log("MongoDB Connected..."))
   .catch((err) => console.error(err));
 
 //to not get any deprecation warning or error
@@ -31,31 +31,32 @@ app.use(cookieParser());
 app.use(helmet());
 
 // Logger Middleware
-app.use(morgan('dev'));
+app.use(morgan("dev"));
 
 // CORS Middleware
 app.use(cors());
 
-app.use('/api/users', require('./routes/users'));
-app.use('/api/follow', require('./routes/follow'));
+app.use("/api/users", require("./routes/users"));
+app.use("/api/follow", require("./routes/follow"));
+app.use("/api/findsimilar", require("./routes/findSimilar"));
 
 //use this to show static files you have in node js server to client (react js)
 //https://stackoverflow.com/questions/48914987/send-image-path-from-node-js-express-server-to-react-client
-app.use('/uploads', express.static('uploads'));
+app.use("/uploads", express.static("uploads"));
 
 // Serve static assets if in production
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === "production") {
   // Set static folder
   // All the javascript and css files will be read and served from this folder
-  app.use(express.static('client/build'));
+  app.use(express.static("client/build"));
 
-  app.post('/', (req, res) => {
+  app.post("/", (req, res) => {
     res.send(`${req.body.a} ${req.body.b}`);
   });
 
   // index.html for all page routes  html or routing and naviagtion
-  app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, '../client', 'build', 'index.html'));
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "../client", "build", "index.html"));
   });
 }
 
