@@ -28,7 +28,7 @@ function YouKnowPage(props) {
             alert('Failed to get User Data');
           }
         });
-  }, []);
+  }, [UserVariable, user]);
 
   let friendsArray = [''];
 
