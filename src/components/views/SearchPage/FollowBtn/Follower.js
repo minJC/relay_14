@@ -58,7 +58,7 @@ function Follower(props) {
           alert('Failed to get isFollowed');
         }
       });
-  }, []);
+  }, [userFrom, userTo]);
 
   return (
     <div>

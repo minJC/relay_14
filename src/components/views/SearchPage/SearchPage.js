@@ -49,7 +49,7 @@ function SearchPage(props) {
         }
       });
     //
-  }, [find]);
+  }, [find, searchVariable]);
 
   //following 기능
   const [Follow, setFollow] = useState([]);
@@ -60,7 +60,7 @@ function SearchPage(props) {
       userFrom: props.user.userData,
     };
     axios
-      .post('/api/follow/getlist', userVariable) //follow친구 목록 가져오기
+      .post('https://relay14-server.herokuapp.com/api/follow/getlist', userVariable) //follow친구 목록 가져오기
       .then((response) => {
         if (response.data.success) {
           setFollow(response.data.user);
@@ -68,7 +68,7 @@ function SearchPage(props) {
           alert('Failed to get Follow Data');
         }
       });
-  }, [propData]);
+  }, [propData, props.user.userData]);
 
   //유저목록 받아오기
   useEffect(() => {
@@ -86,7 +86,7 @@ function SearchPage(props) {
       userFrom: props.user.userData,
     };
     axios
-      .post('/api/follow/getlist', userVariable) //follow친구 목록 가져오기
+      .post('https://relay14-server.herokuapp.com/api/follow/getlist', userVariable) //follow친구 목록 가져오기
       .then((response) => {
         if (response.data.success) {
           setFollow(response.data.user);
@@ -94,7 +94,7 @@ function SearchPage(props) {
           alert('Failed to get Follow Data');
         }
       });
-  }, []);
+  }, [props.user.userData, searchVariable]);
 
   //voice recognition 기능 추가
   const commands = [
