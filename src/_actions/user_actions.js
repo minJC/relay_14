@@ -3,7 +3,9 @@ import { LOGIN_USER, REGISTER_USER, AUTH_USER, LOGOUT_USER, FIND_USER_BY_PHOTO }
 import { BACK_SERVER_URL, headersConfig } from '../components/Config.js';
 
 export function registerUser(dataToSubmit) {
-  const request = axios.post(`/api/users/register`, dataToSubmit).then((response) => response.data);
+  const request = axios
+    .post(`https://relay14-server.herokuapp.com/api/users/register`, dataToSubmit)
+    .then((response) => response.data);
 
   return {
     type: REGISTER_USER,
