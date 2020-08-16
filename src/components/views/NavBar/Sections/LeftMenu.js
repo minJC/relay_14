@@ -21,6 +21,14 @@ function LeftMenu(props) {
                </Link>
         
       </Menu.Item>
+      <Menu.Item key="친구찾기" style={{marginTop: '5px'}}>
+        <Link to={{
+                  pathname : `/find`,
+                  state : null
+               }}><span>친구찾기</span>
+               </Link>
+        
+      </Menu.Item>
     </Menu>
   )
 }

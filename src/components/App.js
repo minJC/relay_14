@@ -9,6 +9,8 @@ import LoginPage from "./views/LoginPage/LoginPage.js";
 import RegisterPage from "./views/RegisterPage/RegisterPage.js";
 import SearchPage from "./views/SearchPage/SearchPage.js";
 import YouKnowPage from "./views/YouKnowPage/YouKnowPage.js";
+import FindPage from "./views/FindPage/FindPage.js";
+import FindResultPage from "./views/FindResultPage/FindResultPage.js"
 
 import test from "./views/LandingPage/test.js";
 
@@ -39,6 +41,8 @@ function App() {
             <Route exact path="/search" component={Auth(SearchPage, null)} />
             <Route exact path="/search/:key" component={Auth(SearchPage, null)} />
             <Route exact path="/youknow" component={Auth(YouKnowPage, true)} />
+            <Route exact path="/find" component={Auth(FindPage, true)} />
+            <Route exact path="/findResult" component={Auth(FindResultPage, true)} />
           </div>
           <Route component={Auth(NotFoundPage, null)} />
         </Switch>

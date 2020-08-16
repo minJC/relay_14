@@ -9,3 +9,5 @@ export const SAVE_MESSAGE = 'save_message';
 
 export const GET_CHATS = 'get_chats';
 export const AFTER_POST_MESSAGE = 'after_post_message';
+
+export const FIND_USER_BY_PHOTO = 'find_user_by_photo';

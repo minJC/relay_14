@@ -1,1 +1,1 @@
-export const BACK_URL = 'http://localhost:5000'  //localhost
+export const BACK_URL = 'https://relay14-server.herokuapp.com/'; //localhost
