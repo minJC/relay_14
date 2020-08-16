@@ -61,6 +61,7 @@ function LoginPage(props) {
                   localStorage.removeItem('rememberMe');
                 }
                 props.history.push("/");
+                window.location.reload(false);
               } else {
                 setFormErrorMessage('Check out your Account or Password again')
               }

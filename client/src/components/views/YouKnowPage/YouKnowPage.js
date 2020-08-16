@@ -27,7 +27,7 @@ function YouKnowPage(props) {
                         //setUsers("error");
                         alert('Failed to get User Data')
                     }
-                })
+                }).catch(err => console.log(err));
     }, [])
 
     let friendsArray = [""];

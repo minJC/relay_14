@@ -20,6 +20,8 @@ function RightMenu(props) {
       })
   };
 
+  console.log(user);
+
   
   if(user.loginSucces && user.loginSucces.loginSuccess && user.userData && !user.userData.isAuth) {
     window.location.replace("/");         //수동 새로고침 proxy 사용 문제로 인해서...
