@@ -89,7 +89,6 @@ function RegisterPage(props) {
             }
            
           }
-          console.log("성별",values.sex);
 
           let dataToSubmit = {
             email: values.email,
