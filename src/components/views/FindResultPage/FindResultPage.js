@@ -3,11 +3,15 @@ import { FaCode } from "react-icons/fa";
 import { Card, Avatar, Col, Typography, Row, Button } from "antd";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import UserProfile from "../../modules/UserProfile/UserProfile";
 const { Title } = Typography;
 const { Meta } = Card;
 
 function FindResultPage(props) {
   const [Users, setUsers] = useState([]);
+  const [SpecificUser, setSpecificUser] = useState({name: "", image: "", email: "", school: "", company: "", intro: ""})
+  const [ModalVisible, setModalVisible] = useState(false);
+
   let image =
     "https://static.wadiz.kr/main/media/img-fundingopen-pc@2x.3311937d.jpg";
   let user = useSelector((state) => state.user.findData);
@@ -30,9 +34,21 @@ function FindResultPage(props) {
 
   let friendsArray = [""];
 
-  const addFriend = (userData) => {
+  const showFriend = (userData) => {
+    setModalVisible(true);
+    console.log(ModalVisible);
+    setSpecificUser({name: userData.name,
+      image: userData.image,
+      email: userData.email,
+      school: userData.school,
+      company: userData.company,
+      intro: userData.intro});
     console.log(userData._id);
   };
+
+  const offModal = () => {
+    setModalVisible(false);
+  }
 
   //카드 css 동적 변경
   let cardStyle = function () {
@@ -59,7 +75,7 @@ function FindResultPage(props) {
           <div
             style={cardStyle()}
             onClick={() => {
-              addFriend(users);
+              showFriend(users);
             }}
           >
             <div
@@ -94,6 +110,7 @@ function FindResultPage(props) {
     });
     return (
       <div style={{ width: "100%", overflow: "hidden" }}>
+        <UserProfile userData={SpecificUser} isVisible={ModalVisible} offModal={offModal} />
         <section
           id="mainsection"
           style={{
